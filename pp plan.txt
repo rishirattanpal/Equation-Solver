@@ -1,0 +1,30 @@
+
+Plan:
+What will I do:
+•	Make an equation solver 
+•	User inputs valid text which corresponds to an equation or system of equations 
+•	Invalid input will be called out
+•	Program then solves said equation
+•	Types of equations it will solve linear, quadratic, cubic, systems of equations, inequalities, rational and differential equations/integral equations (potentially)
+•	Make an aesthetic UI
+•	Show working out
+
+How will I do it:
+•	Backend will be done in python/flask to handle the problems and produce an output
+•	Frontend will be done in html, css and js
+•	Html to display content of my web app
+•	Css to make the content look nice
+•	Js to make the app more interactive
+•	Jinja to pass data from flask to html
+•	When user inputs problem I will determine what type of equation it is and use the appropriate method, using sympy
+•	Linear/ system of linear equations – Gaussian elimination
+•	General purpose calculator 
+•	Quadratics – quadratic equation
+•	Polynomials – newton Raphson
+•	Inequalities – context based
+•	Differential equations (first order)
+What will it look like:
+•	Heading for title
+•	Text box for problems lower down
+•	Calculator like GUI for inputting problems
+•	text box mid-section for displaying answers, initially set to instructions for the user
