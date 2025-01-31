@@ -32,11 +32,11 @@ def classify_equation(equation):
         lhs, rhs = equation.split('=')
 
         lhs_sympy = sympify(lhs)
-        print(f"sympify = {lhs_sympy}")
+        #print(f"sympify = {lhs_sympy}")
         rhs_sympy = sympify(rhs)
 
         lhs_poly = lhs_sympy.as_poly()
-        print(f"poly = {lhs_poly}")
+        #print(f"poly = {lhs_poly}")
         rhs_poly = rhs_sympy.as_poly()
 
         lhs_degree = lhs_poly.degree() if lhs_poly is not None else 0
@@ -57,10 +57,10 @@ def preprocess_equation(equation):
     equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation)
     return equation
 
-print(preprocess_equation("4x + 2"))
 
+
+# main
 equations, systemOfequations = get_user_input()
-
 equations = [preprocess_equation(equation) for equation in equations]
 
 
@@ -74,7 +74,7 @@ if systemOfequations == True:
 
 else:
     equationType = classify_equation(equations[0])
+    print(equationType)
 
 
-print(equationType)
 
