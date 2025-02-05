@@ -2,6 +2,7 @@ import re
 import numpy as np
 from sympy import symbols, Eq, solve, sympify, parse_expr, S, Add
 
+# user input functions
 def get_user_input():
     systemOfEquations = False
 
@@ -56,6 +57,7 @@ def preprocess_equation(equation):
     equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation)
     return equation
 
+# solving sim equations functions
 def rearrange_to_ax_b(eq):
     """
     Rearranges a linear equation into the form Ax = b.
@@ -101,18 +103,25 @@ def system_to_ax_b(equations):
     equations = [preprocess_equation(eq) for eq in equations]
     
     # Parse the strings into sympy equations
-    sympy_eqs = []
     for eq_str in equations:
         lhs, rhs = eq_str.split('=')
         lhs_expr = parse_expr(lhs.strip())
         rhs_expr = parse_expr(rhs.strip())
         sympy_eqs.append(Eq(lhs_expr, rhs_expr))
+    print(f"sympy_eqs: {sympy_eqs}")
     
     # Rearrange each equation
     rearranged_eqs = [rearrange_to_ax_b(eq) for eq in sympy_eqs]
+    print(f"rearranged_eqs {rearranged_eqs}")
     
+    # collect vars and keep in a consistent order
+    all_symbols = set()
+    for eq in sympy_eqs:
+        all_symbols |= eq.free_symbols
+    variables = sorted(all_symbols, key=lambda x: str(x))  # Sort variables for consistent order
+    print(f"variables {variables}")
+
     # Extract coefficients and constants
-    variables = sorted(sympy_eqs[0].free_symbols, key=lambda x: str(x))  # Sort variables for consistent order
     A = []
     b = []
     
@@ -123,15 +132,158 @@ def system_to_ax_b(equations):
     
     # Convert to NumPy arrays
     A_np = np.array(A, dtype=float)
-    b_np = np.array(b, dtype=float)
+    b_np = np.array(b, dtype=float).reshape(-1, 1)
     
     return A_np, b_np
 
+def row_reduction(A):
+# =============================================================================
+# A is a NumPy array that represents an augmented matrix of dimension n x (n+1)
+# associated with a linear system.  RowReduction returns B, a NumPy array that
+# represents the row echelon form of A.  RowReduction may not return correct
+# results if the the matrix A does not have a pivot in each column.
+# =============================================================================
+   
+    m = A.shape[0]  # A has m rows 
+    n = A.shape[1]  # It is assumed that A has m+1 columns
+    
+    B = np.copy(A).astype('float64')
 
+    # For each step of elimination, we find a suitable pivot, move it into
+    # position and create zeros for all entries below.
+    
+    for k in range(m):
+        # Set pivot as (k,k) entry
+        pivot = B[k][k]
+        pivot_row = k
+        
+        # Find a suitable pivot if the (k,k) entry is zero
+        while(pivot == 0 and pivot_row < m-1):
+            pivot_row += 1
+            pivot = B[pivot_row][k]
+            
+        # Swap row if needed
+        if (pivot_row != k):
+            B = row_swap(B,k,pivot_row)
+            
+        # If pivot is nonzero, carry on with elimination in column k
+        if (pivot != 0):
+            B = row_scale(B,k,1./B[k][k])
+            for i in range(k+1,m):    
+                B = row_add(B,k,i,-B[i][k])
+        else:
+            print("Pivot could not be found in column",k,".")
+
+    return B
+
+def back_substitution(U,B):
+# =============================================================================
+#     U is a NumPy array that represents an upper triangular square mxm matrix.  
+#     B is a NumPy array that represents an mx1 vector     
+#     BackSubstitution will return an mx1 vector that is the solution of the
+#     system UX=B.
+# =============================================================================
+    m = U.shape[0]  # m is number of rows and columns in U
+    X = np.zeros((m,1))
+    
+    for i in range(m-1,-1,-1):  # Calculate entries of X backward from m-1 to 0
+        X[i] = B[i]
+        for j in range(i+1,m):
+            X[i] -= U[i][j]*X[j]
+        if (U[i][i] != 0):
+            X[i] /= U[i][i]
+        else:
+            print("Zero entry found in U pivot position",i,".")
+    return X
+
+def solve_system(A,B):
+    # =============================================================================
+    # A is a NumPy array that represents a matrix of dimension n x n.
+    # B is a NumPy array that represents a matrix of dimension n x 1.
+    # SolveSystem returns a NumPy array of dimension n x 1 such that AX = B.
+    # If the system AX = B does not have a unique solution, SolveSystem may not
+    # generate correct results.
+    # =============================================================================
+
+    # Check shape of A
+    if (A.shape[0] != A.shape[1]):
+        print("SolveSystem accepts only square arrays.")
+        return
+    n = A.shape[0]  # n is number of rows and columns in A
+    
+    # 1. Join A and B to make the augmented matrix
+    A_augmented = np.hstack((A,B))
+
+    # 2. Carry out elimination    
+    R = row_reduction(A_augmented)
+
+    # 3. Split R back to nxn piece and nx1 piece
+    B_reduced = R[:,n:n+1]
+    A_reduced = R[:,0:n]
+
+    # 4. Do back substitution
+    X = back_substitution(A_reduced,B_reduced)
+    return X
+
+
+# matrix manipulation functions
+def row_swap(A,k,l):
+# =============================================================================
+#     A is a NumPy array.  RowSwap will return duplicate array with rows
+#     k and l swapped.
+# =============================================================================
+    m = A.shape[0]  # m is number of rows in A
+    n = A.shape[1]  # n is number of columns in A
+    
+    B = np.copy(A).astype('float64')
+        
+    for j in range(n):
+        temp = B[k][j]
+        B[k][j] = B[l][j]
+        B[l][j] = temp
+        
+    return B
+
+def row_scale(A,k,scale):
+# =============================================================================
+#     A is a NumPy array.  RowScale will return duplicate array with the
+#     entries of row k multiplied by scale.
+# =============================================================================
+    m = A.shape[0]  # m is number of rows in A
+    n = A.shape[1]  # n is number of columns in A
+    
+    B = np.copy(A).astype('float64')
+
+    for j in range(n):
+        B[k][j] *= scale
+        
+    return B
+
+def row_add(A,k,l,scale):
+# =============================================================================
+#     A is a numpy array.  RowAdd will return duplicate array with row
+#     l modifed.  The new values will be the old values of row l added to 
+#     the values of row k, multiplied by scale.
+# =============================================================================
+    m = A.shape[0]  # m is number of rows in A
+    n = A.shape[1]  # n is number of columns in A
+    
+    B = np.copy(A).astype('float64')
+        
+    for j in range(n):
+        B[l][j] += B[k][j]*scale
+        
+    return B
+        
+
+#------------------------------------
 # main
+
+# get user input
+x, y, z = symbols('x y z')
+
 equations, systemOfequations = get_user_input()
 equations = [preprocess_equation(equation) for equation in equations]
-
 
 print(equations)
 print(systemOfequations)
@@ -139,10 +291,20 @@ print(systemOfequations)
 
 
 if systemOfequations == True:
+    sympy_eqs = []
     print("Implement systems method")
-    A, b = system_to_ax_b(equations)
+    A, b = system_to_ax_b(equations) # get augmented matrix
     print(f"A {A}")
     print(f"b {b}")
+
+    variables = set().union(*[eq.free_symbols for eq in sympy_eqs])
+    variables = sorted(variables, key=lambda x: str(x))
+
+    answer = solve_system(A, b)
+    print(f"answer\n {answer}")
+
+    for i, var in enumerate(variables):
+        print(f"{var} = {answer[i].item():.2f}")
 
     
 
