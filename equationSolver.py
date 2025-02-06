@@ -1,6 +1,6 @@
 import re
 import numpy as np
-from sympy import symbols, Eq, solve, sympify, parse_expr, S, Add
+from sympy import symbols, Eq, sympify, parse_expr, S, Add
 
 # user input functions
 def get_user_input():
@@ -57,7 +57,7 @@ def preprocess_equation(equation):
     equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation)
     return equation
 
-# solving sim equations functions
+# solving sim/linear equations functions
 def rearrange_to_ax_b(eq):
     """
     Rearranges a linear equation into the form Ax = b.
@@ -225,6 +225,18 @@ def solve_system(A,B):
     X = back_substitution(A_reduced,B_reduced)
     return X
 
+def solve_systems_and_linear(equations):
+    A, b = system_to_ax_b(equations) # get augmented matrix
+    
+    variables = set().union(*[eq.free_symbols for eq in sympy_eqs])
+    variables = sorted(variables, key=lambda x: str(x))
+
+    answer = solve_system(A, b)
+    
+    for i, var in enumerate(variables):
+        print(f"{var} = {answer[i].item():.2f}")
+
+    return answer
 
 # matrix manipulation functions
 def row_swap(A,k,l):
@@ -275,6 +287,8 @@ def row_add(A,k,l,scale):
         
     return B
         
+    
+
 
 #------------------------------------
 # main
@@ -292,25 +306,28 @@ print(systemOfequations)
 
 if systemOfequations == True:
     sympy_eqs = []
-    print("Implement systems method")
-    A, b = system_to_ax_b(equations) # get augmented matrix
-    print(f"A {A}")
-    print(f"b {b}")
-
-    variables = set().union(*[eq.free_symbols for eq in sympy_eqs])
-    variables = sorted(variables, key=lambda x: str(x))
-
-    answer = solve_system(A, b)
-    print(f"answer\n {answer}")
-
-    for i, var in enumerate(variables):
-        print(f"{var} = {answer[i].item():.2f}")
+    solve_systems_and_linear(equations)
 
     
 
 else:
     equationType = classify_equation(equations[0])
     print(equationType)
+
+    if equationType == 'linear':
+        sympy_eqs = []
+        solve_systems_and_linear(equations)
+
+    elif equationType == 'quadratic':
+        print('implement quadratic method')
+        print(rearrange_to_ax_b(equations))
+
+
+    
+
+
+
+
 
 
 
