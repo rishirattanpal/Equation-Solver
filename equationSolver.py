@@ -1,6 +1,7 @@
 import re
 import numpy as np
-from sympy import symbols, Eq, sympify, parse_expr, S, Add
+from sympy import symbols, Eq, sympify, parse_expr, S, Add, sqrt
+import math
 
 # user input functions
 def get_user_input():
@@ -286,8 +287,21 @@ def row_add(A,k,l,scale):
         B[l][j] += B[k][j]*scale
         
     return B
-        
-    
+
+# quadratic functions
+def lhs_subtract_rhs(eq):
+    lhs, rhs = eq.split('=')
+
+    lhs_expr = parse_expr(lhs.strip())
+    rhs_expr = parse_expr(rhs.strip())
+
+    standard_lhs = lhs_expr - rhs_expr
+
+    standard_form_eq = Eq(standard_lhs, 0)
+
+    return standard_lhs
+
+
 
 
 #------------------------------------
@@ -320,10 +334,42 @@ else:
 
     elif equationType == 'quadratic':
         print('implement quadratic method')
-        print(rearrange_to_ax_b(equations))
+        print(equations)
+
+        equation = equations[0]
+
+        standard_quadratic = lhs_subtract_rhs(equation)
+        print(standard_quadratic)
+
+        variables_dict = standard_quadratic.as_coefficients_dict()
+
+        # quadratic formula = (-b±√(b²-4ac))/(2a)
+        a = variables_dict[x**2]
+        b = variables_dict[x]
+        c = variables_dict[1]
+        print(a)
+        print(b)
+        print(c)
+
+        # give the exact form
+        x1_1 = f"(-{b} + {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
+        x2_1 = f"(-{b} - {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
+
+        print(f"x = {x1_1}")
+        print(f"x = {x2_1}")
+
+        # decimal form
+        x1_2 = (-b + math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
+        x2_2 = (-b - math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
+
+        print(f"x = {x1_2}")
+        print(f"x = {x2_2}")
 
 
-    
+        # print(rearrange_to_ax_b(equations)) get it as an eq
+
+
+ 
 
 
 
