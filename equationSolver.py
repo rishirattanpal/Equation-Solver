@@ -55,7 +55,8 @@ def classify_equation(equation):
 
 def preprocess_equation(equation):
 
-    equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation)
+    equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation) # convert 2x to x**2
+    equation = re.sub(r'\^', r'**', equation)
     return equation
 
 # solving sim/linear equations functions
@@ -297,11 +298,56 @@ def lhs_subtract_rhs(eq):
 
     standard_lhs = lhs_expr - rhs_expr
 
-    standard_form_eq = Eq(standard_lhs, 0)
 
     return standard_lhs
 
+def solve_quadratic(equation):
+        standard_quadratic = lhs_subtract_rhs(equation)
+        print(standard_quadratic)
 
+        variables_dict = standard_quadratic.as_coefficients_dict()
+
+        # quadratic formula = (-b±√(b²-4ac))/(2a)
+        a = variables_dict[x**2]
+        b = variables_dict[x]
+        c = variables_dict[1]
+        print(a)
+        print(b)
+        print(c)
+
+        # check feasibility via discriminant
+        discriminant = pow(b,2) - (4*a*c)
+
+        if discriminant > 0:
+
+            # give the exact form
+            x1_1 = f"(-{b} + {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
+            x2_1 = f"(-{b} - {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
+
+            print(f"x = {x1_1}")
+            print(f"x = {x2_1}")
+
+            # decimal form
+            x1_2 = (-b + math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
+            x2_2 = (-b - math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
+
+            print(f"x = {x1_2}")
+            print(f"x = {x2_2}")
+
+            return x1_2, x2_2
+        
+        elif discriminant == 0:
+            x1_1 = f"({-b} + {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
+            print(f"x = {x1_1}")
+
+            x1_2 = (-b + math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
+            print(f"x = {x1_2}")
+
+            return x1_2
+
+        else:
+            print('infeasible quadratic - no real roots')
+            return None
 
 
 #------------------------------------
@@ -322,8 +368,6 @@ if systemOfequations == True:
     sympy_eqs = []
     solve_systems_and_linear(equations)
 
-    
-
 else:
     equationType = classify_equation(equations[0])
     print(equationType)
@@ -333,40 +377,10 @@ else:
         solve_systems_and_linear(equations)
 
     elif equationType == 'quadratic':
-        print('implement quadratic method')
-        print(equations)
-
         equation = equations[0]
-
-        standard_quadratic = lhs_subtract_rhs(equation)
-        print(standard_quadratic)
-
-        variables_dict = standard_quadratic.as_coefficients_dict()
-
-        # quadratic formula = (-b±√(b²-4ac))/(2a)
-        a = variables_dict[x**2]
-        b = variables_dict[x]
-        c = variables_dict[1]
-        print(a)
-        print(b)
-        print(c)
-
-        # give the exact form
-        x1_1 = f"(-{b} + {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
-        x2_1 = f"(-{b} - {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
-
-        print(f"x = {x1_1}")
-        print(f"x = {x2_1}")
-
-        # decimal form
-        x1_2 = (-b + math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
-        x2_2 = (-b - math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
-
-        print(f"x = {x1_2}")
-        print(f"x = {x2_2}")
+        solve_quadratic(equation)
 
 
-        # print(rearrange_to_ax_b(equations)) get it as an eq
 
 
  
