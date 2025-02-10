@@ -207,6 +207,8 @@ def solve_system(A,B):
     # generate correct results.
     # =============================================================================
 
+    infiniteSolutions = False
+
     # Check shape of A
     if (A.shape[0] != A.shape[1]):
         print("SolveSystem accepts only square arrays.")
@@ -219,13 +221,27 @@ def solve_system(A,B):
     # 2. Carry out elimination    
     R = row_reduction(A_augmented)
 
+    print(f"reduced matrix {R}")
+
+    #feasibility = check_system_feasibility(R)
+
+    # check feasibility
+    for row in R:
+        # no solutions
+        if all(c == 0 for c in row[:-1]) and row[-1] != 0:
+            return "System has no solution (inconsistent system).", infiniteSolutions
+        # infinite solutions
+        if all(c == 0 for c in row[:-1]) and row[-1] == 0:
+            infiniteSolutions = True
+
+
     # 3. Split R back to nxn piece and nx1 piece
     B_reduced = R[:,n:n+1]
     A_reduced = R[:,0:n]
 
     # 4. Do back substitution
     X = back_substitution(A_reduced,B_reduced)
-    return X
+    return X, infiniteSolutions
 
 def solve_systems_and_linear(equations):
     A, b = system_to_ax_b(equations) # get augmented matrix
@@ -233,12 +249,26 @@ def solve_systems_and_linear(equations):
     variables = set().union(*[eq.free_symbols for eq in sympy_eqs])
     variables = sorted(variables, key=lambda x: str(x))
 
-    answer = solve_system(A, b)
-    
-    for i, var in enumerate(variables):
-        print(f"{var} = {answer[i].item():.2f}")
+    answer, infiniteSols = solve_system(A, b)
+    print(infiniteSols)
 
-    return answer
+    if isinstance(answer, str):
+        print(answer)
+        return answer
+    elif infiniteSols == True:
+        print("This is a system with infinite solutions")
+        for i, var in enumerate(variables):
+            print(f"{var} = {answer[i].item():.2f}")
+        
+        return answer
+
+    else:
+        for i, var in enumerate(variables):
+            print(f"{var} = {answer[i].item():.2f}")
+
+        return answer
+
+
 
 # matrix manipulation functions
 def row_swap(A,k,l):
@@ -367,6 +397,7 @@ print(systemOfequations)
 if systemOfequations == True:
     sympy_eqs = []
     solve_systems_and_linear(equations)
+
 
 else:
     equationType = classify_equation(equations[0])
