@@ -1,6 +1,6 @@
 import re
 import numpy as np
-from sympy import symbols, Eq, sympify, parse_expr, S, Add, sqrt
+from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand
 import math
 
 # user input functions
@@ -57,7 +57,22 @@ def preprocess_equation(equation):
 
     equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation) # convert 2x to x**2
     equation = re.sub(r'\^', r'**', equation)
-    return equation
+
+    equation = re.sub(r'\)\s*\(', r')*(', equation)
+
+    lhs, rhs = equation.split('=')
+
+    lhs_expr = sympify(lhs.strip())
+    rhs_expr = sympify(rhs.strip())
+
+    # Step 6: Expand LHS and RHS
+    lhs_expr = expand(lhs_expr)
+    rhs_expr = expand(rhs_expr)
+
+    # Step 7: Reconstruct the equation as a string
+    expanded_equation = f"{lhs_expr} = {rhs_expr}"
+
+    return expanded_equation
 
 # solving sim/linear equations functions
 def rearrange_to_ax_b(eq):
@@ -269,7 +284,6 @@ def solve_systems_and_linear(equations):
         return answer
 
 
-
 # matrix manipulation functions
 def row_swap(A,k,l):
 # =============================================================================
@@ -385,6 +399,14 @@ def solve_quadratic(equation):
 
 # get user input
 x, y, z = symbols('x y z')
+
+# test = "(x+1)(x+2)"
+# print(test)
+
+# test_expr = sympify(test)
+# expand_expr = expand(test_expr)
+# print(expand_expr)
+
 
 equations, systemOfequations = get_user_input()
 equations = [preprocess_equation(equation) for equation in equations]
