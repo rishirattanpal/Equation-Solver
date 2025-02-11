@@ -420,7 +420,6 @@ if systemOfequations == True:
     sympy_eqs = []
     solve_systems_and_linear(equations)
 
-
 else:
     equationType = classify_equation(equations[0])
     print(equationType)
