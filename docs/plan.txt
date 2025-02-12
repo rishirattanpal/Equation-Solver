@@ -1,0 +1,18 @@
+1. Detailed Proposal 23/09 - 01/11
+1.1 background reading 23/09 - 30/09
+1.2 Write proposal - 30/09 - 25/10
+1.3 Proof read/Finalise - 24/10 - 31/10
+
+2. Software Implementation 01/11 - 15/03
+2.1 Implement basic backend 01/11 - 15/11
+2.2 Implement basic frontend 16/11 - 23/11
+2.3 Finish backend 24/11 - 12/01
+2.4 Finish Frontend 13/01 - 18/02
+2.5 Testing 19/02 - 05/03
+2.6 Finalize 06/03 - 13/03
+
+3. Video Production 14/03 - 28/03
+3.1 Make slides 14/03 - 21/03
+3.2 Record video 22/03 - 27/03
+
+4. Project Dissertation 09/03 - 09/05

@@ -1,0 +1,11 @@
+possible plan
+
+There are a few steps to follow :
+
+First create an equation parser, that parses the numbers, operators, and variables. Parsing is identifying those objects in the input textstring that the user of the program types on the keyboard.
+Then usually the infix expression is converted to postfix notation, taking into account the operator precedence rules. This is more practical and faster for evaluation with a stack.
+Then you write a procedure that calculates the value of the equation for certain number constants attached to the variables using an execution stack that pushes and pops the numbers on the stack when operator precedence requires this.
+Then you write a numerical Newton-Raphson method to search the zero(s) iteratively in a numerical way. For the derivative of the equation, you can use f’(x) = lim h->0 ( f(x+h) - f(x) )/h , or you can calculate the derivative analytically with a stack also, using the rules for derivative. In the case of a system of equations, you will need also a procedure to solve a linear system of linear equations to apply the general Newton-Raphson method.
+Then you write a procedure to search several initial values for the variables in the case that there is no convergence. I don’t know about the best strategy to do this, so you probably best read a book about this issue, or you can try several values ad hoc with the random generator.
+If you have done all this, you can test with entering a nonlinear equation and trying to find the zero(s) of it.
+I see that you do not want a numerical method, but most equations can only be solved numerically. If you want to solve them merely analytically, you will need to classify the equation in categories like polynomial equation, goniometric equation, … It then depends on which kind of equations you have in mind.

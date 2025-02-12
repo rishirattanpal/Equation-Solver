@@ -1,0 +1,61 @@
+def RowSwap(A,k,l):
+# =============================================================================
+#     A is a NumPy array.  RowSwap will return duplicate array with rows
+#     k and l swapped.
+# =============================================================================
+    m = A.shape[0]  # m is number of rows in A
+    n = A.shape[1]  # n is number of columns in A
+    
+    B = np.copy(A).astype('float64')
+        
+    for j in range(n):
+        temp = B[k][j]
+        B[k][j] = B[l][j]
+        B[l][j] = temp
+        
+    return B
+
+def RowScale(A,k,scale):
+# =============================================================================
+#     A is a NumPy array.  RowScale will return duplicate array with the
+#     entries of row k multiplied by scale.
+# =============================================================================
+    m = A.shape[0]  # m is number of rows in A
+    n = A.shape[1]  # n is number of columns in A
+    
+    B = np.copy(A).astype('float64')
+
+    for j in range(n):
+        B[k][j] *= scale
+        
+    return B
+
+def RowAdd(A,k,l,scale):
+# =============================================================================
+#     A is a numpy array.  RowAdd will return duplicate array with row
+#     l modifed.  The new values will be the old values of row l added to 
+#     the values of row k, multiplied by scale.
+# =============================================================================
+    m = A.shape[0]  # m is number of rows in A
+    n = A.shape[1]  # n is number of columns in A
+    
+    B = np.copy(A).astype('float64')
+        
+    for j in range(n):
+        B[l][j] += B[k][j]*scale
+        
+    return B
+    
+
+# code to get matrix into row echleon form
+
+
+R = RowScale(R,0,1.0/R[0][0])
+R = RowAdd(R,0,1,-R[1][0])
+R = RowAdd(R,0,2,-R[2][0])
+R = RowScale(R,1,1.0/R[1][1])
+R = RowAdd(R,1,2,-R[2][1])
+R = RowScale(R,2,1.0/R[2][2])
+print(R)
+
+

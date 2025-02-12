@@ -407,30 +407,30 @@ x, y, z = symbols('x y z')
 # expand_expr = expand(test_expr)
 # print(expand_expr)
 
+if __name__ == "__main__":
+    equations, systemOfequations = get_user_input()
+    equations = [preprocess_equation(equation) for equation in equations]
 
-equations, systemOfequations = get_user_input()
-equations = [preprocess_equation(equation) for equation in equations]
-
-print(equations)
-print(systemOfequations)
+    print(equations)
+    print(systemOfequations)
 
 
 
-if systemOfequations == True:
-    sympy_eqs = []
-    solve_systems_and_linear(equations)
-
-else:
-    equationType = classify_equation(equations[0])
-    print(equationType)
-
-    if equationType == 'linear':
+    if systemOfequations == True:
         sympy_eqs = []
         solve_systems_and_linear(equations)
 
-    elif equationType == 'quadratic':
-        equation = equations[0]
-        solve_quadratic(equation)
+    else:
+        equationType = classify_equation(equations[0])
+        print(equationType)
+
+        if equationType == 'linear':
+            sympy_eqs = []
+            solve_systems_and_linear(equations)
+
+        elif equationType == 'quadratic':
+            equation = equations[0]
+            solve_quadratic(equation)
 
 
 

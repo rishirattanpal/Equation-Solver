@@ -1,0 +1,52 @@
+Reverse polish notation
+
+is it better to classify equation and solve using different methods
+or to use newton rhapson to solve all
+
+
+@ for matrix mult in numpy
+
+Tasks:
+
+format user input - done 
+classify each equation - done
+solve dependent on assigned class - done
+test edge cass
+
+Expand expressions in brackets on input
+
+
+
+
+
+
+
+
+
+
+
+
+for systems:
+build augmented matrix:
+- allign variables on one side and constants on the other
+- represent as matrix
+
+row reduction - reduce to row echleon form
+split matrix
+back substitution to get vals
+DONE
+
+
+for linear:
+can use systems method
+DONE
+
+
+for quadratic:
+- use formula
+DONE
+
+
+
+
+

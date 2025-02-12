@@ -1,0 +1,17 @@
+Front end plan:
+
+Display the web app
+
+1/3 of space is used to input problem and display answer
+2/3 of space is used to show graph
+
+
+have a text box for user input
+- pass user input through a function
+have a box to display answer
+
+
+Do plotting in backend first then display in frontend 
+Plotting plan:
+
+-use matplotlib

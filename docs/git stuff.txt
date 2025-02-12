@@ -1,0 +1,26 @@
+git stuff
+
+git add 
+git commit . 
+
+git remote add origin <repository-URL>
+
+git push -u origin master #3
+
+
+git checkout <commit hash>
+git checkout master
+
+rishirattanpal
+Rishi9035%59
+
+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
+
+https://<rishirattanpal>:<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>@github.com/<rishirattanpal>/<Equation-Solver>.git
+
+git clone https://rishirattanpal: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@github.com/rishirattanpal/Equation-Solver.git
+
+
+git add .
+git commit -m "Resolved conflicts"
+git push origin master
