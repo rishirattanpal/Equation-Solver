@@ -116,6 +116,8 @@ def system_to_ax_b(equations):
         A (numpy.ndarray): Coefficient matrix.
         b (numpy.ndarray): Constant vector.
     """
+    sympy_eqs = []
+
     # Preprocess equations to handle implicit multiplication
     equations = [preprocess_equation(eq) for eq in equations]
     
@@ -126,6 +128,7 @@ def system_to_ax_b(equations):
         rhs_expr = parse_expr(rhs.strip())
         sympy_eqs.append(Eq(lhs_expr, rhs_expr))
     print(f"sympy_eqs: {sympy_eqs}")
+
     
     # Rearrange each equation
     rearranged_eqs = [rearrange_to_ax_b(eq) for eq in sympy_eqs]
@@ -151,7 +154,7 @@ def system_to_ax_b(equations):
     A_np = np.array(A, dtype=float)
     b_np = np.array(b, dtype=float).reshape(-1, 1)
     
-    return A_np, b_np
+    return A_np, b_np, sympy_eqs
 
 def row_reduction(A):
 # =============================================================================
@@ -259,29 +262,34 @@ def solve_system(A,B):
     return X, infiniteSolutions
 
 def solve_systems_and_linear(equations):
-    A, b = system_to_ax_b(equations) # get augmented matrix
+    A, b, sympy_eqs = system_to_ax_b(equations)  # Get augmented matrix
     
+    # Collect variables from the equations
     variables = set().union(*[eq.free_symbols for eq in sympy_eqs])
     variables = sorted(variables, key=lambda x: str(x))
 
+    print(f"A = {A}")
+    print(f"B = {b}")
+
     answer, infiniteSols = solve_system(A, b)
-    print(infiniteSols)
+    
+    solution_dict = {
+        "equations" : equations
+    }
+
 
     if isinstance(answer, str):
-        print(answer)
-        return answer
-    elif infiniteSols == True:
-        print("This is a system with infinite solutions")
-        for i, var in enumerate(variables):
-            print(f"{var} = {answer[i].item():.2f}")
-        
-        return answer
+        return {"error": answer}
+    
 
-    else:
-        for i, var in enumerate(variables):
-            print(f"{var} = {answer[i].item():.2f}")
+    for i, var in enumerate(variables):
+        solution_dict[str(var)] = round(answer[i].item(), 2)
 
-        return answer
+    if infiniteSols:
+        solution_dict["note"] = "This system has infinitely many solutions"
+
+    return solution_dict
+    
 
 
 # matrix manipulation functions
@@ -346,6 +354,8 @@ def lhs_subtract_rhs(eq):
     return standard_lhs
 
 def solve_quadratic(equation):
+        x = symbols('x')
+
         standard_quadratic = lhs_subtract_rhs(equation)
         print(standard_quadratic)
 
@@ -359,46 +369,43 @@ def solve_quadratic(equation):
         print(b)
         print(c)
 
+        result = {
+            "equation" : str(equation)
+        }
+
         # check feasibility via discriminant
         discriminant = pow(b,2) - (4*a*c)
 
         if discriminant > 0:
 
-            # give the exact form
-            x1_1 = f"(-{b} + {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
-            x2_1 = f"(-{b} - {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
+            x1 = (-b + math.sqrt(discriminant) / (2*a))
+            x2 = (-b - math.sqrt(discriminant) / (2*a))
 
-            print(f"x = {x1_1}")
-            print(f"x = {x2_1}")
+            result['solutions'] = {
+                'x1' : round(x1, 2),
+                'x2' : round(x2, 2)
+            }
 
-            # decimal form
-            x1_2 = (-b + math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
-            x2_2 = (-b - math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
-
-            print(f"x = {x1_2}")
-            print(f"x = {x2_2}")
-
-            return x1_2, x2_2
         
         elif discriminant == 0:
-            x1_1 = f"({-b} + {math.sqrt(pow(b, 2) - (4 * a * c))} / {(2*a)})"
-            print(f"x = {x1_1}")
+            x1 = (-b + math.sqrt(discriminant) / (2*a))
 
-            x1_2 = (-b + math.sqrt(pow(b, 2) - (4 * a * c))) / (2 * a)
-            print(f"x = {x1_2}")
+            result['solutions'] = {
+                'x1' : round(x1, 2),
+            }
 
-            return x1_2
 
         else:
-            print('infeasible quadratic - no real roots')
-            return None
+            result['solutions'] = None
+            result['note'] = "No real roots"
+
+        return result
 
 
 #------------------------------------
 # main
 
 # get user input
-x, y, z = symbols('x y z')
 
 # test = "(x+1)(x+2)"
 # print(test)
@@ -408,6 +415,8 @@ x, y, z = symbols('x y z')
 # print(expand_expr)
 
 if __name__ == "__main__":
+
+    x, y, z = symbols('x y z')
     equations, systemOfequations = get_user_input()
     equations = [preprocess_equation(equation) for equation in equations]
 
@@ -418,7 +427,8 @@ if __name__ == "__main__":
 
     if systemOfequations == True:
         sympy_eqs = []
-        solve_systems_and_linear(equations)
+        answer = solve_systems_and_linear(equations)
+        print(answer)
 
     else:
         equationType = classify_equation(equations[0])
@@ -430,17 +440,40 @@ if __name__ == "__main__":
 
         elif equationType == 'quadratic':
             equation = equations[0]
+            print(f"answer = {solve_quadratic(equation)}")
             solve_quadratic(equation)
 
 
 
 
- 
 
 
 
+def solve_equation(equations):
+    x, y, z = symbols('x y z')
+    
+    if len(equations) > 1:
+        systemOfequations = True
+    else:
+        systemOfequations = False
+
+    equations = [preprocess_equation(equation) for equation in equations]
+
+    if systemOfequations == True:
+        return solve_systems_and_linear(equations)
+
+    else:
+        equationType = classify_equation(equations[0])
+        print(equationType)
+
+        if equationType == 'linear':
+            return solve_systems_and_linear(equations)
+
+        elif equationType == 'quadratic':
+            equation = equations[0]
+            return solve_quadratic(equation)
 
 
-
+    
 
 

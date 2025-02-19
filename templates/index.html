@@ -13,7 +13,14 @@
         <button type="submit">Solve</button>
     </form>
     <h2>Result:</h2>
-    <pre id="result"></pre>
+    {% if answer %}
+    <ul>
+        {% for variable, value in answer.items() %}
+            <li>{{variable}} = {{value}} </li>
+        {% endfor %}
+    </ul>
+
+    {% endif %}
 
 </body>
 </html>
