@@ -5,7 +5,6 @@ import math
 
 # user input functions
 def get_user_input():
-    systemOfEquations = False
 
     equations = []
     print("Enter each equation (press Enter on an empty line to stop):")
@@ -16,11 +15,8 @@ def get_user_input():
             break
         equations.append(equation)
 
-    if len(equations) == 1:
-        return equations, systemOfEquations
-    elif len(equations) > 1:
-        systemOfEquations = True
-        return equations, systemOfEquations
+    if len(equations) >= 1:
+        return equations
     else:
         return equations, "no equations entered"
 
@@ -73,6 +69,22 @@ def preprocess_equation(equation):
     expanded_equation = f"{lhs_expr} = {rhs_expr}"
 
     return expanded_equation
+
+# basic arithmetic
+def if_basic_arithmetic(expression):
+
+    pattern = r'^[\d\s\.\+\-\*\/\^\(\)]+$' # checks for any arithmetic expression
+    return re.match(pattern, expression)
+
+def solve_basic_arithmetic(expression):
+    try:
+        result = parse_expr(expression).evalf()
+        result = round(float(result), 3)
+    
+        return {"expression": expression, "result": result}
+    except Exception as e:
+        return {"error": f"Failed to evaluate the expression: {e}"}
+
 
 # solving sim/linear equations functions
 def rearrange_to_ax_b(eq):
@@ -291,7 +303,6 @@ def solve_systems_and_linear(equations):
     return solution_dict
     
 
-
 # matrix manipulation functions
 def row_swap(A,k,l):
 # =============================================================================
@@ -414,39 +425,6 @@ def solve_quadratic(equation):
 # expand_expr = expand(test_expr)
 # print(expand_expr)
 
-if __name__ == "__main__":
-
-    x, y, z = symbols('x y z')
-    equations, systemOfequations = get_user_input()
-    equations = [preprocess_equation(equation) for equation in equations]
-
-    print(equations)
-    print(systemOfequations)
-
-
-
-    if systemOfequations == True:
-        sympy_eqs = []
-        answer = solve_systems_and_linear(equations)
-        print(answer)
-
-    else:
-        equationType = classify_equation(equations[0])
-        print(equationType)
-
-        if equationType == 'linear':
-            sympy_eqs = []
-            solve_systems_and_linear(equations)
-
-        elif equationType == 'quadratic':
-            equation = equations[0]
-            print(f"answer = {solve_quadratic(equation)}")
-            solve_quadratic(equation)
-
-
-
-
-
 
 
 def solve_equation(equations):
@@ -457,9 +435,16 @@ def solve_equation(equations):
     else:
         systemOfequations = False
 
+        # basic sums
+    if not systemOfequations and if_basic_arithmetic(equations[0]):
+        return solve_basic_arithmetic(equations[0])
+
     equations = [preprocess_equation(equation) for equation in equations]
 
-    if systemOfequations == True:
+
+
+
+    if systemOfequations:
         return solve_systems_and_linear(equations)
 
     else:
@@ -477,3 +462,9 @@ def solve_equation(equations):
     
 
 
+if __name__ == "__main__":
+    
+    equations = get_user_input()
+    result = solve_equation(equations)
+
+    print(result)
