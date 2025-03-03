@@ -1,7 +1,8 @@
 import re
 import numpy as np
-from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand
+from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow
 import math
+from collections import defaultdict
 
 # user input functions
 def get_user_input():
@@ -470,7 +471,41 @@ def find_roots(coefficients, numPoints = 100, delta = 1e-10, maxIter = 1000):
 def solve_polynomial(equation):
     x = symbols('x')
 
-    standardPolynomial = 
+    standardPolynomial = lhs_subtract_rhs(equation)
+
+
+    variables_dict = standardPolynomial.as_coefficients_dict()
+    print(variables_dict)
+    print(type(variables_dict[0]))
+
+    for k in variables_dict.keys():
+        if not isinstance(k, int):
+            print(f"Problematic key: {k}, Type: {type(k)}")
+            print(f"Coefficients dict: {k.as_coefficients_dict()}")
+
+
+    highestPower = max(
+        variables_dict.keys(),
+        key=lambda k: k if isinstance(k, int) else (k.as_base_exp()[1] if isinstance(k, Pow) else 1)
+    )
+
+    length = highestPower + 1
+    print(length)
+
+    coefficients = [0] * length
+    
+    for term, coeff in variables_dict.items():
+        if isinstance(term, int):
+            order = term
+
+        else:
+            order = term.as_coefficients_dict().popitem()[0]
+            coefficients[length - 1 - order] = coeff
+
+    print(coefficients)
+
+
+    return 0
 
 
 #------------------------------------

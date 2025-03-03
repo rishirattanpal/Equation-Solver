@@ -71,5 +71,3 @@ roots = find_roots(coefficients)
 roundedRoots = [np.round(root, 10) for root in roots]
 realRoots = [float(r.real) for r in roundedRoots]
 print(realRoots)
-
-
