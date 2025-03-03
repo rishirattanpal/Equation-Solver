@@ -2,11 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def f(x):
-    return 4*x**4 + 2*x - 1
+    # return 4*x**4 + 2*x - 1
+    return x**3 - 6*x**2 + 11*x - 6 
 
 
 def df(x):
-    return 16*x**3 + 2
+    # return 16*x**3 + 2
+    return 3*x**2 - 12*x + 11
 
 def cauchy_bound(coefficients):
     # finds the upper bound a root can have
@@ -59,46 +61,15 @@ def find_roots(coefficients, numPoints = 100, delta = 1e-10, maxIter = 1000):
         
     return roots
 
-# 4*x**4 + 2*x - 1
-coefficients = [4, 0, 0, 2, -1]
+# 4*x**4 + 2*x - 1 
+#coefficients = [4, 0, 0, 2, -1]
+
+# x**3 - 6*x**2 + 11x - 6
+coefficients = [1, -6, 11, -6]
 
 roots = find_roots(coefficients)
-print(roots)
+roundedRoots = [np.round(root, 10) for root in roots]
+realRoots = [float(r.real) for r in roundedRoots]
+print(realRoots)
 
 
-
-# xvalues = np.linspace(-1, 1, 100)
-# yvalues = f(xvalues)
-
-# plt.axhline(0)
-# plt.plot(xvalues, yvalues)
-# # plt.show()
-
-# delta = 1e-10
-
-
-# rvalues = np.linspace(-5, 5, 100)
-# ivalues = np.linspace(-5, 5, 100)
-
-# roots = []
-
-# for r in rvalues:
-#     for i in ivalues:
-#         guess = r + i*1j
-
-#         for n in range(1000):
-#             nextGuess = guess - f(guess)/df(guess)
-#             if abs(nextGuess - guess) < delta:
-#                 alreadyIn = False
-#                 for root in roots:
-#                     if abs(nextGuess - root) < delta:
-#                         alreadyIn = True
-#                         break
-#                 if not alreadyIn:
-#                     roots.append(nextGuess)
-#                 break
-                
-#             guess = nextGuess
-     
-    
-# print(roots)
