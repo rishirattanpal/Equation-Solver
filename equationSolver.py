@@ -1,6 +1,6 @@
 import re
 import numpy as np
-from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow
+from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol
 import math
 from collections import defaultdict
 
@@ -489,7 +489,10 @@ def solve_polynomial(equation):
         key=lambda k: k if isinstance(k, int) else (k.as_base_exp()[1] if isinstance(k, Pow) else 1)
     )
 
-    length = highestPower + 1
+
+    base, exponent = highestPower.as_base_exp()
+
+    length = exponent + 1
     print(length)
 
     coefficients = [0] * length
@@ -500,6 +503,12 @@ def solve_polynomial(equation):
 
         else:
             order = term.as_coefficients_dict().popitem()[0]
+            if isinstance(order, Pow):
+                order = order.as_base_exp()[1]  # Extracts the exponent
+            elif isinstance(order, Symbol):
+                order = 1  # If it's just 'x', the exponent is 1
+
+            print(order)
             coefficients[length - 1 - order] = coeff
 
     print(coefficients)
