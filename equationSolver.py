@@ -1,8 +1,9 @@
 import re
 import numpy as np
-from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol
+from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify
 import math
 from collections import defaultdict
+import timeit 
 
 # user input functions
 def get_user_input():
@@ -438,7 +439,7 @@ def newton_raphson(f, df, guess, delta = 1e-10, maxIter = 1000):
         
         nextGuess = guess - fVal / dfVal
 
-        if abs(nextGuess - guess) < delta:
+        if abs(np.complex128(nextGuess) - np.complex128(guess)) < delta:
             return nextGuess
         
         guess = nextGuess
@@ -446,75 +447,105 @@ def newton_raphson(f, df, guess, delta = 1e-10, maxIter = 1000):
     raise ValueError("Max num of iterations reached, no sol found")
         
 
-def find_roots(coefficients, numPoints = 100, delta = 1e-10, maxIter = 1000):
+def find_roots(coefficients, f, df, numPoints = 100, delta = 1e-10, maxIter = 100):
     
     bound = cauchy_bound(coefficients)
     realRange = np.linspace(-bound, bound, numPoints)
     imagRange = np.linspace(-bound, bound, numPoints)
 
     roots = []
+    counter = 0
 
     for r in realRange:
         for i in imagRange:
-            guess = r + i*1j
+            guess = complex(r, i)
 
             try:
                 root = newton_raphson(f, df, guess, delta, maxIter)
 
-                if not any(abs(root - existingRoot) < delta for existingRoot in roots):
-                    roots.append(root) # add root if unique 
-            except ValueError:
+                if root is not None:
+                    if not any(abs(root - existingRoot) < delta for existingRoot in roots):
+                        roots.append(root) # add root if unique 
+            except Exception:
                 continue
-        
-    return roots
+
+            counter += 1
+            print(f"progress: {counter} / {counter*counter}")
+
+
+    # check without this
+    cleaned_roots = []
+    for root in roots:
+        # If imaginary part is very small, convert to real
+        if abs(root.imag) < delta:
+            cleaned_roots.append(round(root.real, 3))
+        else:
+            cleaned_roots.append(root)
+    
+    return cleaned_roots
+    
 
 def solve_polynomial(equation):
     x = symbols('x')
 
+    print(equation)
+    print(type(equation))
+
+
+    # Assuming lhs_subtract_rhs is a function that rearranges the equation to standard form
     standardPolynomial = lhs_subtract_rhs(equation)
 
-
+    # Get the coefficients dictionary
     variables_dict = standardPolynomial.as_coefficients_dict()
-    print(variables_dict)
-    print(type(variables_dict[0]))
-
-    for k in variables_dict.keys():
-        if not isinstance(k, int):
-            print(f"Problematic key: {k}, Type: {type(k)}")
-            print(f"Coefficients dict: {k.as_coefficients_dict()}")
+    print("Variables dict:", variables_dict)
 
 
+    print(variables_dict.keys())
+
+    # get highest order 
     highestPower = max(
         variables_dict.keys(),
-        key=lambda k: k if isinstance(k, int) else (k.as_base_exp()[1] if isinstance(k, Pow) else 1)
+        key=lambda k: k.as_base_exp()[1] if isinstance(k, Pow) else (1 if isinstance(k, Symbol) else 0)
     )
 
 
-    base, exponent = highestPower.as_base_exp()
 
+    _, exponent = highestPower.as_base_exp()
+
+    # Length of the coefficients array
     length = exponent + 1
-    print(length)
+    print("Length of coefficients array:", length)
 
+    # Initialize the coefficients array
     coefficients = [0] * length
-    
+
+
+
+    # fill in coefficients
     for term, coeff in variables_dict.items():
-        if isinstance(term, int):
-            order = term
+        print(f"Key: {term} (Type: {type(term).__name__}), Value: {coeff}")
 
+        # extract components
+        if isinstance(term, Pow):
+            order = term.as_base_exp()[1]  
+        elif isinstance(term, Symbol):
+            order = 1  
         else:
-            order = term.as_coefficients_dict().popitem()[0]
-            if isinstance(order, Pow):
-                order = order.as_base_exp()[1]  # Extracts the exponent
-            elif isinstance(order, Symbol):
-                order = 1  # If it's just 'x', the exponent is 1
+            # handles the constant
+            order = 0
 
-            print(order)
-            coefficients[length - 1 - order] = coeff
+        # Place the coefficient in the correct position
+        coefficients[length - 1 - order] = coeff
 
-    print(coefficients)
+    print("Coefficients array:", coefficients)
+
+    f = lambdify(x, standardPolynomial, 'numpy')
+    df = lambdify(x, diff(standardPolynomial), 'numpy')
+
+    roots = find_roots(coefficients, f, df)
 
 
-    return 0
+    return roots
 
 
 #------------------------------------
@@ -572,6 +603,12 @@ def solve_equation(equations):
 if __name__ == "__main__":
     
     equations = get_user_input()
+
+    start = timeit.timeit()
     result = solve_equation(equations)
 
+    end = start = timeit.timeit()
+    timeTaken = end - start
+
     print(result)
+    print(timeTaken)

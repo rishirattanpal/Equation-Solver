@@ -31,6 +31,7 @@ def newton_raphson(f, df, guess, delta = 1e-10, maxIter = 1000):
         
         nextGuess = guess - fVal / dfVal
 
+
         if abs(nextGuess - guess) < delta:
             return nextGuess
         
