@@ -2,8 +2,6 @@ import re
 import numpy as np
 from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify
 import math
-from collections import defaultdict
-import timeit 
 
 # user input functions
 def get_user_input():
@@ -287,8 +285,8 @@ def solve_systems_and_linear(equations):
 
     answer, infiniteSols = solve_system(A, b)
     
-    solution_dict = {
-        "equations" : equations
+    result = {
+        "equation" : equations
     }
 
 
@@ -296,13 +294,12 @@ def solve_systems_and_linear(equations):
         return {"error": answer}
     
 
-    for i, var in enumerate(variables):
-        solution_dict[str(var)] = round(answer[i].item(), 2)
-
+    result["solutions"] = {str(var): round(answer[i].item(), 2) for i, var in enumerate(variables)}
+    
     if infiniteSols:
-        solution_dict["note"] = "This system has infinitely many solutions"
+        result["note"] = "This system has infinitely many solutions"
 
-    return solution_dict
+    return result
     
 
 # matrix manipulation functions
@@ -391,22 +388,16 @@ def solve_quadratic(equation):
 
         if discriminant > 0:
 
-            x1 = (-b + math.sqrt(discriminant) / (2*a))
-            x2 = (-b - math.sqrt(discriminant) / (2*a))
+            x1 = round(((-b + math.sqrt(discriminant)) / (2*a)), 3)
+            x2 = round(((-b - math.sqrt(discriminant)) / (2*a)), 3)
 
-            result['solutions'] = {
-                'x1' : round(x1, 2),
-                'x2' : round(x2, 2)
-            }
+            result['solutions'] = [x1, x2]
 
         
         elif discriminant == 0:
-            x1 = (-b + math.sqrt(discriminant) / (2*a))
-
-            result['solutions'] = {
-                'x1' : round(x1, 2),
-            }
-
+            x1 = round(((-b) / (2*a)), 3)
+            
+            result['solutions'] = x1
 
         else:
             result['solutions'] = None
@@ -417,6 +408,28 @@ def solve_quadratic(equation):
 
 
 # newton rhapson stuff
+def clean_roots(roots, tol = 1e-3):
+    print("cleaning roots")
+    cleaned = []
+    seen = set()
+
+    for root in roots:
+        if abs(root.imag) < tol:
+            root = root.real
+    
+        if isinstance(root, complex):
+            rounded = complex(round(root.real, 3), round(root.imag,3))
+        else:
+            rounded = round(root.real, 3)
+
+        root_str = str(rounded)
+
+        if root_str not in seen:
+            seen.add(root_str)
+            cleaned.append(rounded)
+
+    return cleaned
+
 def cauchy_bound(coefficients):
     # finds the upper bound a root can have
 
@@ -447,7 +460,7 @@ def newton_raphson(f, df, guess, delta = 1e-10, maxIter = 1000):
     raise ValueError("Max num of iterations reached, no sol found")
         
 
-def find_roots(coefficients, f, df, numPoints = 100, delta = 1e-10, maxIter = 100):
+def find_roots(coefficients, f, df, numPoints = 50, delta = 1e-10, maxIter = 100):
     
     bound = cauchy_bound(coefficients)
     realRange = np.linspace(-bound, bound, numPoints)
@@ -470,19 +483,21 @@ def find_roots(coefficients, f, df, numPoints = 100, delta = 1e-10, maxIter = 10
                 continue
 
             counter += 1
-            print(f"progress: {counter} / {counter*counter}")
+            #print(f"progress: {counter} / {counter*counter}")
 
 
-    # check without this
-    cleaned_roots = []
-    for root in roots:
-        # If imaginary part is very small, convert to real
-        if abs(root.imag) < delta:
-            cleaned_roots.append(round(root.real, 3))
-        else:
-            cleaned_roots.append(root)
+    # # check without this
+    # cleaned_roots = []
+    # for root in roots:
+    #     # If imaginary part is very small, convert to real
+    #     if abs(root.imag) < delta:
+    #         cleaned_roots.append(round(root.real, 3))
+    #     else:
+    #         cleaned_roots.append(root)
+
+    cleanedRoots = clean_roots(roots)
     
-    return cleaned_roots
+    return cleanedRoots
     
 
 def solve_polynomial(equation):
@@ -544,8 +559,14 @@ def solve_polynomial(equation):
 
     roots = find_roots(coefficients, f, df)
 
+    result = {
+        "equation" : str(equation),
+        "solutions" : roots,
+        "note" : f"Polynomial of degree {exponent}"
+    }
 
-    return roots
+
+    return result
 
 
 #------------------------------------
@@ -603,12 +624,6 @@ def solve_equation(equations):
 if __name__ == "__main__":
     
     equations = get_user_input()
-
-    start = timeit.timeit()
     result = solve_equation(equations)
 
-    end = start = timeit.timeit()
-    timeTaken = end - start
-
     print(result)
-    print(timeTaken)
