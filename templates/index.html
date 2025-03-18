@@ -1,72 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv = "X-UA-Compatible" content = "IE-edge">
-
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <title>Equation Solver</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
 </head>
 <body>
-
-    <div class = "container">
-        <div class = "row mb-5">
-            <div class = "col box">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col">
                 <h1>Equation Solver</h1>
             </div>
-
         </div>
 
-        
-        <div class = "row mb-2">
-            <div class = "col box">
-                <form id="equationForm" action = "/" method = "POST">
+        <div class="row mb-2">
+            <div class="col">
+                <form id="equationForm" action="/" method="POST">
                     <label for="equations">Enter Equations (one per line):</label><br>
-                    <textarea id="equations" name="equations" rows="5" class = "form-control"></textarea><br>
-                    <button type="submit" class = "btn btn-primary w-100 mt-2">Solve</button>
+                    <textarea id="equations" name="equations" rows="5" class="form-control"></textarea><br>
+                    <button type="submit" class="btn btn-primary w-100 mt-2">Solve</button>
                 </form>
             </div>
-
-            <div class = "col box">
+            <div class="col">
                 <h2>GRAPH</h2>
             </div>
-
         </div>
 
-
-        <div class = "row mb-5">
-            <div class = "col box">
+        <div class="row mb-5">
+            <div class="col">
                 <h2>Result:</h2>
                 {% if answer %}
                 <ul>
                     {% for variable, value in answer.items() %}
-                        <li>{{variable}} = {{value}} </li>
+                        <li>{{ variable }} = {{ value }}</li>
                     {% endfor %}
                 </ul>
                 {% endif %}
-
             </div>
-
         </div>
 
-        <div class = "row">
-            <div class = "col box">
-                Calculator
-
+        <div class="row">
+            <div class="col">
+                <div id="calculator">
+                    <input id="display" readonly>
+                    <div id="keys">
+                        <button onclick="appendToDisplay('+')" class="operator-btn">+</button>
+                        <button onclick="appendToDisplay('7')">7</button>
+                        <button onclick="appendToDisplay('8')">8</button>
+                        <button onclick="appendToDisplay('9')">9</button>
+                        <button onclick="appendToDisplay('-')" class="operator-btn">-</button>
+                        <button onclick="appendToDisplay('4')">4</button>
+                        <button onclick="appendToDisplay('5')">5</button>
+                        <button onclick="appendToDisplay('6')">6</button>
+                        <button onclick="appendToDisplay('*')" class="operator-btn">*</button>
+                        <button onclick="appendToDisplay('1')">1</button>
+                        <button onclick="appendToDisplay('2')">2</button>
+                        <button onclick="appendToDisplay('3')">3</button>
+                        <button onclick="appendToDisplay('/')" class="operator-btn">/</button>
+                        <button onclick="appendToDisplay('0')">0</button>
+                        <button onclick="appendToDisplay('.')">.</button>
+                        <button onclick="calculate()">=</button>
+                        <button onclick="clearDisplay()" class="operator-btn">C</button>
+                    </div>
+                </div>
             </div>
-            
-           
         </div>
-
-
-
     </div>
-
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

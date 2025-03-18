@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from equationSolver import classify_equation, solve_quadratic, solve_systems_and_linear, solve_equation
+from equationSolver import solve_equation
 
 
 app = Flask(__name__)
