@@ -1,116 +1,158 @@
 /* General body styles */
 body {
   margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: hsl(0, 0%, 95%);
+  padding: 20px 0;
+  background-color: hsl(0, 0%, 85%); 
   font-family: Arial, sans-serif;
 }
 
-  
+/* Responsive size indicator */
+body::before {
+  content: "XS";
+  color: red;
+  font-size: 1rem;
+  font-weight: bold;
+  position: fixed;
+  top: 5px;
+  right: 5px;
+}
+
+@media (min-width: 576px) {
   body::before {
-    content: "XS";
-    color: red;
-    font-size: 2rem;
-    font-weight: bold;
-    position: fixed;
-    top: 0;
-    right: 0;
+    content: "SM";
   }
-  
+}
 
-  
-  @media (min-width: 576px) {
-    body::before {
-      content: "SM";
-    }
+@media (min-width: 768px) {
+  body::before {
+    content: "MD";
   }
-  
-  @media (min-width: 768px) {
-    body::before {
-      content: "MD";
-    }
+}
+
+@media (min-width: 992px) {
+  body::before {
+    content: "LG";
   }
-  
-  @media (min-width: 992px) {
-    body::before {
-      content: "LG";
-    }
+}
+
+@media (min-width: 1200px) {
+  body::before {
+    content: "XL";
   }
-  
-  @media (min-width: 1200px) {
-    body::before {
-      content: "XL";
-    }
+}
+
+@media (min-width: 1400px) {
+  body::before {
+    content: "XXL";
   }
-  
-  @media (min-width: 1400px) {
-    body::before {
-      content: "XXL";
-    }
+}
+
+/* Form styles */
+#equations {
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+
+.graph-container {
+  height: 100%;
+  min-height: 200px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Calculator styles */
+#calculator {
+  font-family: Arial, sans-serif;
+  background-color: hsl(0, 0%, 15%);
+  border-radius: 8px;
+  max-width: 100%; /* Ensures it doesn't exceed the parent container's width */
+  width: 100%; /* Takes up the full width of its column */
+  margin: 0 auto; /* Centers the calculator horizontally */
+  padding: 20px; /* Adds padding inside the calculator */
+  box-sizing: border-box; /* Ensures padding is included in the width */
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+#keys {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 12px;
+}
+
+button {
+  width: 100%;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  filter: brightness(110%);
+}
+
+button:active {
+  filter: brightness(90%);
+}
+
+/* Button styles */
+button {
+  background-color: hsl(0, 0%, 30%);
+}
+
+.operator-btn {
+  background-color: hsl(35, 100%, 55%);
+}
+
+.function-btn {
+  background-color: hsl(210, 100%, 40%);
+}
+
+.variable-btn {
+  background-color: hsl(270, 100%, 40%);
+}
+
+.equal-btn {
+  background-color: hsl(120, 100%, 30%);
+}
+
+.clear-btn {
+  background-color: hsl(0, 100%, 40%);
+}
+
+.wide-btn {
+  grid-column: span 2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #calculator {
+    padding: 15px; /* Slightly reduce padding on smaller screens */
   }
 
+  #keys {
+    grid-template-columns: repeat(4, 1fr); /* Fewer columns on smaller screens */
+  }
 
-
-#calculator{
-    font-family: Arial, sans-serif;
-    background-color: hsl(0, 0%, 15%);
-    border-radius: 15px;
-    max-width: 500px;
-    overflow: hidden;
-
+  button {
+    height: 45px; /* Slightly larger buttons for easier tapping */
+    font-size: 1.1rem;
+  }
 }
 
-#display{
-    width: 100%;
-    padding: 20px;
-    font-size: 5rem;
-    text-align: left;
-    border: none;
-    background-color: hsl(0, 0%, 20%);
-    color: white;
-}
-
-#keys{
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 25px;
-}
-
-button{
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-    border: none;
-    background-color: hsl(0, 0%, 30%);
-    color: white;
-    font-size: 3rem;
-    font-weight: bold;
-    cursor: pointer;
-
-}
-
-button:hover{
-    background-color: hsl(0, 0%, 40%);
-}
-
-button:active{
-    background-color: hsl(0, 0%, 50%);
-}
-
-.operator-btn{
-    background-color: hsl(35, 100%, 55%);
-
-}
-
-.operator-btn:hover{
-    background-color: hsl(35, 100%, 65%);
-
-}
-.operator-btn:active{
-    background-color: hsl(35, 100%, 75%);
-
+@media (max-width: 576px) {
+  #keys {
+    grid-template-columns: repeat(3, 1fr); /* Even fewer columns on very small screens */
+  }
 }
