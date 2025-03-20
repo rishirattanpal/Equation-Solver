@@ -1,5 +1,36 @@
 from flask import Flask, render_template, request
 from equationSolver import solve_equation
+import re
+
+
+
+def format_answer(answer):
+    if "result" in answer:
+        formattedEquations = answer["expression"]
+        formattedSolutions = str(answer["result"])
+        return formattedEquations, formattedSolutions
+    
+    inputEquations = answer.get("equation", [])
+    solutions = answer.get("solutions", {})
+
+    # format equation
+    if isinstance(inputEquations, list):
+        formattedEquations = "\n".join(inputEquations)
+    else:
+        formattedEquations = str(inputEquations)
+
+    # format solutiin
+    if isinstance(solutions, dict):
+        formattedSolutions = "\n".join([f"{var} = {value}" for var, value in solutions.items()])
+    elif isinstance(solutions, list):
+        formattedSolutions = "\n".join([f"x = {value}" for value in solutions])
+    else:
+        formattedSolutions = "no solution found"
+
+    return formattedEquations, formattedSolutions
+
+
+
 
 app = Flask(__name__)
 
@@ -15,19 +46,8 @@ def index():
         answer = solve_equation(equations)
         print(f"Answer: {answer}")
 
-        # format arithmetic solution
-        if "result" in answer:
-            formattedEquations = answer["expression"]
-            formattedSolutions = str(answer["result"])
-        else:
-            # format equation solutions
-            inputEquations = answer.get("equation", [])  
-            solutions = answer.get("solutions", {})       
+        formattedEquations, formattedSolutions = format_answer(answer)
 
-            formattedEquations = "\n".join(inputEquations)
-            formattedSolutions = "\n".join([f"{var} = {value}" for var, value in solutions.items()])
-
-        # render with answewr
         return render_template(
             "index.html",
             equations=formattedEquations,
@@ -38,3 +58,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+

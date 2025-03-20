@@ -400,7 +400,7 @@ def solve_quadratic(equation):
             result['solutions'] = x1
 
         else:
-            result['solutions'] = None
+            result['solutions'] = "No real roots"
             result['note'] = "No real roots"
 
         return result
@@ -478,6 +478,7 @@ def find_roots(coefficients, f, df, numPoints = 50, delta = 1e-10, maxIter = 100
 
                 if root is not None:
                     if not any(abs(root - existingRoot) < delta for existingRoot in roots):
+                        print(root)
                         roots.append(root) # add root if unique 
             except Exception:
                 continue

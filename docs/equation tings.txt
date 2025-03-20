@@ -1,0 +1,11 @@
+Make text look nicer
+format results
+graph
+
+add e, log, 
+
+inequalities
+
+3x+18y=z
+7y+3z=9x
+4z*6y=3
