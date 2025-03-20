@@ -78,7 +78,7 @@ def if_basic_arithmetic(expression):
 
 def solve_basic_arithmetic(expression):
     try:
-        result = parse_expr(expression).evalf()
+        result = sympify(expression).evalf()
         result = round(float(result), 3)
     
         return {"expression": expression, "result": result}
@@ -591,7 +591,7 @@ def solve_equation(equations):
     else:
         systemOfequations = False
 
-        # basic sums
+    # basic sums
     if not systemOfequations and if_basic_arithmetic(equations[0]):
         return solve_basic_arithmetic(equations[0])
 

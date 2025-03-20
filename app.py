@@ -15,21 +15,23 @@ def index():
         answer = solve_equation(equations)
         print(f"Answer: {answer}")
 
-        # Extract the equations and solutions
-        input_equations = answer.get("equation", [])  # List of input equations
-        solutions = answer.get("solutions", {})       # Dictionary of solutions
+        # format arithmetic solution
+        if "result" in answer:
+            formattedEquations = answer["expression"]
+            formattedSolutions = str(answer["result"])
+        else:
+            # format equation solutions
+            inputEquations = answer.get("equation", [])  
+            solutions = answer.get("solutions", {})       
 
-        # Format the equations into a clean string
-        formatted_equations = "\n".join(input_equations)
+            formattedEquations = "\n".join(inputEquations)
+            formattedSolutions = "\n".join([f"{var} = {value}" for var, value in solutions.items()])
 
-        # Format the solutions into a clean string
-        formatted_solutions = "\n".join([f"{var} = {value}" for var, value in solutions.items()])
-
-        # Pass the formatted equations and solutions to the template
+        # render with answewr
         return render_template(
             "index.html",
-            equations=formatted_equations,
-            solutions=formatted_solutions
+            equations=formattedEquations,
+            solutions=formattedSolutions
         )
 
     return render_template("index.html")
