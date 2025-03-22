@@ -1,158 +1,200 @@
-/* General body styles */
+/* Base styling */
 body {
-  margin: 0;
-  padding: 20px 0;
-  background-color: hsl(0, 0%, 85%); 
-  font-family: Arial, sans-serif;
+  background-color: #2d3436;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
-/* Responsive size indicator */
-body::before {
-  content: "XS";
-  color: red;
-  font-size: 1rem;
-  font-weight: bold;
-  position: fixed;
-  top: 5px;
-  right: 5px;
+.main-container {
+  background-color: #2d3436;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: #dfe6e9;
 }
 
-@media (min-width: 576px) {
-  body::before {
-    content: "SM";
-  }
+/* Typography */
+.app-title {
+  color: #dfe6e9;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #636e72;
+  padding-bottom: 0.5rem;
 }
 
-@media (min-width: 768px) {
-  body::before {
-    content: "MD";
-  }
+.section-title {
+  font-size: 1.4rem;
+  color: #dfe6e9;
+  margin-bottom: 1rem;
+  font-weight: 500;
 }
 
-@media (min-width: 992px) {
-  body::before {
-    content: "LG";
-  }
+/* First row - Input and Graph */
+
+
+.input-section .card {
+  background-color: #215492;
+  border: none;
 }
 
-@media (min-width: 1200px) {
-  body::before {
-    content: "XL";
-  }
+.input-section .card-header {
+  background-color: #215492;
+  color: #f5f6fa;
+  border-bottom: none;
 }
 
-@media (min-width: 1400px) {
-  body::before {
-    content: "XXL";
-  }
+.graph-section .card {
+  background-color: #4619a1;
+  border: none;
 }
 
-/* Form styles */
-#equations {
-  font-family: monospace;
-  font-size: 1.1rem;
+.graph-section .card-header {
+  background-color: #4619a1;
+  color: #f5f6fa;
+  border-bottom: none;
 }
 
 .graph-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   height: 100%;
-  min-height: 200px;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  min-height: 220px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  color: #f5f6fa;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
 }
 
-/* Calculator styles */
-#calculator {
-  font-family: Arial, sans-serif;
-  background-color: hsl(0, 0%, 15%);
+/* Second row - Input Equations and Solutions */
+.equations-section .card {
+  background-color: #9c2222;
+  border: none;
+}
+
+.equations-section .card-header {
+  background-color: #9c2222;
+  color: #f5f6fa;
+  border-bottom: none;
+}
+
+.solutions-section .card {
+  background-color: #106e55;
+  border: none;
+}
+
+.solutions-section .card-header {
+  background-color: #106e55;
+  color: #f5f6fa;
+  border-bottom: none;
+}
+
+pre {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
   border-radius: 8px;
-  max-width: 100%; /* Ensures it doesn't exceed the parent container's width */
-  width: 100%; /* Takes up the full width of its column */
-  margin: 0 auto; /* Centers the calculator horizontally */
-  padding: 20px; /* Adds padding inside the calculator */
-  box-sizing: border-box; /* Ensures padding is included in the width */
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 20px;
+  border: none;
+  margin-top: 0.5rem;
+  color: #f5f6fa;
+}
+
+/* Calculator row - changed to dark theme */
+.calculator-section .card {
+  background-color: #2d3436;  /* Dark background */
+  border: none;
+}
+
+.calculator-section .card-header {
+  background-color: #2d3436;  /* Slightly lighter dark background for header */
+  color: #f5f6fa;
+  border-bottom: none;
+}
+
+/* Calculator buttons - updated for better contrast on dark theme */
+#calculator {
+  margin-top: 1rem;
 }
 
 #keys {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-  padding: 12px;
+  gap: 8px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-button {
-  width: 100%;
-  height: 50px;
+#keys button {
+  padding: 12px;
+  font-size: 16px;
   border-radius: 8px;
   border: none;
-  color: white;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  background-color: #3d4246;  /* Lighter than the card background */
+  color: #f5f6fa;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-button:hover {
-  filter: brightness(110%);
+#keys button:hover {
+  background-color: #4a5056;  /* Even lighter on hover */
+  transform: translateY(-1px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
 }
 
-button:active {
-  filter: brightness(90%);
-}
-
-/* Button styles */
-button {
-  background-color: hsl(0, 0%, 30%);
-}
-
-.operator-btn {
-  background-color: hsl(35, 100%, 55%);
+/* Keep specialized button colors, but adjust them to work with dark theme */
+.variable-btn {
+  background-color: #3867d6 !important;  /* Darker blue */
 }
 
 .function-btn {
-  background-color: hsl(210, 100%, 40%);
+  background-color: #4834b0 !important;  /* Darker purple */
 }
 
-.variable-btn {
-  background-color: hsl(270, 100%, 40%);
-}
-
-.equal-btn {
-  background-color: hsl(120, 100%, 30%);
+.operator-btn {
+  background-color: #8b2020 !important;  /* Darker red */
 }
 
 .clear-btn {
-  background-color: hsl(0, 100%, 40%);
+  background-color: #8b2020 !important;  /* Same as operator buttons */
 }
 
-.wide-btn {
-  grid-column: span 2;
+.equal-btn {
+  background-color: #16a085 !important;  /* Darker green */
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  #calculator {
-    padding: 15px; /* Slightly reduce padding on smaller screens */
-  }
-
-  #keys {
-    grid-template-columns: repeat(4, 1fr); /* Fewer columns on smaller screens */
-  }
-
-  button {
-    height: 45px; /* Slightly larger buttons for easier tapping */
-    font-size: 1.1rem;
-  }
+/* Form elements */
+.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #f5f6fa;
 }
 
-@media (max-width: 576px) {
-  #keys {
-    grid-template-columns: repeat(3, 1fr); /* Even fewer columns on very small screens */
-  }
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #f5f6fa;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.form-label {
+  color: #f5f6fa;
+}
+
+.btn-primary {
+  background-color: #2d3436;
+  border-color: #222829;
+}
+
+.btn-primary:hover {
+  background-color: #222829;
+  border-color: #1e2223;
+}
+
+/* Text colors */
+.text-muted {
+  color: rgba(255, 255, 255, 0.6) !important;
 }

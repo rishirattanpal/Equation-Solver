@@ -10,83 +10,124 @@
 </head>
 <body>
     <div class="container">
-        <div class="row mb-3">
-            <div class="col">
-                <h1>Equation Solver</h1>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <form id="equationForm" action="/" method="POST">
-                    <label for="equations">Enter Equations (one per line):</label><br>
-                    <textarea id="equations" name="equations" rows="5" class="form-control"></textarea><br>
-                    <button type="submit" class="btn btn-primary w-100 mt-2">Solve</button>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <div class="graph-container">
-                    <h2>GRAPH</h2>
+        <div class="main-container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col">
+                    <h1 class="app-title text-center">Equation Solver</h1>
                 </div>
             </div>
-        </div>
 
-        <div class="row mb-4">
-            <div class="col">
-              <h2>Input Equations:</h2>
-              {% if equations %}
-                <pre>{{ equations }}</pre>
-              {% endif %}
+            <!-- Input and Graph Section -->
+            <div class="row mb-4">
+                <div class="col-md-6 input-section">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Enter Your Equations</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="equationForm" action="/" method="POST">
+                                <div class="mb-3">
+                                    <label for="equations" class="form-label">Type or use the calculator below (one equation per line):</label>
+                                    <textarea id="equations" name="equations" rows="5" class="form-control" placeholder="Example: 2x + 3y = 10"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Solve Equations</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 graph-section">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">Visualization</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="graph-container">
+                                <h3 class="text-center fw-light">Graph will appear here</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          
-          <div class="row mb-4">
-            <div class="col">
-              <h2>Solutions:</h2>
-              {% if solutions %}
-                <pre>{{ solutions }}</pre>
-              {% endif %}
-            </div>
-          </div>
 
-        <div class="row mb-4">
-            <div class="col">
-                <div id="calculator">
-                    <div id="keys">
-                        <button onclick="appendToEquation('x')" class="variable-btn">x</button>
-                        <button onclick="appendToEquation('y')" class="variable-btn">y</button>
-                        <button onclick="appendToEquation('z')" class="variable-btn">z</button>
-                        <button onclick="appendToEquation('=')" class="function-btn">=</button>
-                        <button onclick="appendToEquation('\\n')" class="function-btn">New Line</button>
-                        
-                        <button onclick="appendToEquation('(')" class="function-btn">(</button>
-                        <button onclick="appendToEquation(')')" class="function-btn">)</button>
-                        <button onclick="appendToEquation('^')" class="function-btn">^</button>
-                        <button onclick="appendToEquation('+')" class="operator-btn">+</button>
-                        <button onclick="appendToEquation('\\sqrt{}')" class="function-btn">√</button>
-                        
-                        <button onclick="appendToEquation('7')">7</button>
-                        <button onclick="appendToEquation('8')">8</button>
-                        <button onclick="appendToEquation('9')">9</button>
-                        <button onclick="appendToEquation('-')" class="operator-btn">−</button>
-                        <button onclick="appendToEquation('\\frac{}{}')" class="function-btn">⁄</button>
-                        
-                        <button onclick="appendToEquation('4')">4</button>
-                        <button onclick="appendToEquation('5')">5</button>
-                        <button onclick="appendToEquation('6')">6</button>
-                        <button onclick="appendToEquation('*')" class="operator-btn">×</button>
-                        <button onclick="appendToEquation(',')" class="function-btn">,</button>
-                        
-                        <button onclick="appendToEquation('1')">1</button>
-                        <button onclick="appendToEquation('2')">2</button>
-                        <button onclick="appendToEquation('3')">3</button>
-                        <button onclick="appendToEquation('/')" class="operator-btn">÷</button>
-                        <button onclick="clearEquation()" class="clear-btn">C</button>
-                        
-                        <button onclick="appendToEquation('0')" class="wide-btn">0</button>
-                        <button onclick="appendToEquation('.')">.</button>
-                        <button onclick="backspace()" class="function-btn">⌫</button>
-                        <button onclick="solveEquation()" class="equal-btn">Solve</button>
+            <!-- Results Section -->
+            {% if equations or solutions %}
+            <div class="row mb-4">
+                <div class="col-md-6 equations-section">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Input Equations</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if equations %}
+                                <pre class="mb-0">{{ equations }}</pre>
+                            {% else %}
+                                <p class="text-muted mb-0">No equations entered yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 solutions-section">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Solutions</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if solutions %}
+                                <pre class="mb-0">{{ solutions }}</pre>
+                            {% else %}
+                                <p class="text-muted mb-0">Solutions will appear here</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Calculator Section -->
+            <div class="row">
+                <div class="col-12 calculator-section">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div id="calculator" class="mx-auto">
+                                <div id="keys">
+                                    <button onclick="appendToEquation('x')" class="variable-btn">x</button>
+                                    <button onclick="appendToEquation('y')" class="variable-btn">y</button>
+                                    <button onclick="appendToEquation('z')" class="variable-btn">z</button>
+                                    <button onclick="appendToEquation('=')" class="function-btn">=</button>
+                                    <button onclick="appendToEquation('\\n')" class="function-btn">New Line</button>
+                                    
+                                    <button onclick="appendToEquation('(')" class="function-btn">(</button>
+                                    <button onclick="appendToEquation(')')" class="function-btn">)</button>
+                                    <button onclick="appendToEquation('^')" class="function-btn">^</button>
+                                    <button onclick="appendToEquation('/')" class="operator-btn">÷</button>
+                                    <button onclick="appendToEquation('\\sqrt{}')" class="function-btn">√</button>
+                                    
+                                    <button onclick="appendToEquation('7')">7</button>
+                                    <button onclick="appendToEquation('8')">8</button>
+                                    <button onclick="appendToEquation('9')">9</button>
+                                    <button onclick="appendToEquation('-')" class="operator-btn">−</button>
+                                    <button onclick="appendToEquation('\\frac{}{}')" class="function-btn">⁄</button>
+                                    
+                                    <button onclick="appendToEquation('4')">4</button>
+                                    <button onclick="appendToEquation('5')">5</button>
+                                    <button onclick="appendToEquation('6')">6</button>
+                                    <button onclick="appendToEquation('*')" class="operator-btn">×</button>
+                                    <button onclick="appendToEquation(',')" class="function-btn">,</button>
+                                    
+                                    <button onclick="appendToEquation('1')">1</button>
+                                    <button onclick="appendToEquation('2')">2</button>
+                                    <button onclick="appendToEquation('3')">3</button>
+                                    <button onclick="appendToEquation('+')" class="operator-btn">+</button>
+                                    <button onclick="clearEquation()" class="clear-btn">C</button>
+                                    
+                                    <button onclick="appendToEquation('0')" class="wide-btn">0</button>
+                                    <button onclick="appendToEquation('.')">.</button>
+                                    <button onclick="backspace()" class="function-btn">⌫</button>
+                                    <button onclick="solveEquation()" class="equal-btn">Solve</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

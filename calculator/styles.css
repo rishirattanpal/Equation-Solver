@@ -57,6 +57,14 @@ button:active{
 
 .operator-btn{
     background-color: hsl(35, 100%, 55%);
+    font-size: 5em; /* Larger font size */
+    font-weight: bold; /* Bolder text */
+    border: 1px solid #ccc; /* Subtle border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Padding for better spacing */
+    margin: 5px; /* Margin between buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
 
 }
 
@@ -68,3 +76,4 @@ button:active{
     background-color: hsl(35, 100%, 75%);
 
 }
+
