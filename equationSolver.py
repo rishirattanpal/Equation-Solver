@@ -2,6 +2,7 @@ import re
 import numpy as np
 from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify
 import math
+import matplotlib.pyplot as plt
 
 # user input functions
 def get_user_input():
@@ -570,6 +571,23 @@ def solve_polynomial(equation):
     return result
 
 
+# graph stuff
+def show_graph(equations):
+        equation = equations[0]
+        lhs_subtract_rhs(equation)
+        lhs, rhs = equation.split('=')
+
+        print(equation) 
+        x = np.linspace(-5, 5)
+
+        y = eval(lhs)
+        plt.plot(x,y)
+
+        return plt.show()
+
+
+
+
 #------------------------------------
 # main
 
@@ -626,5 +644,8 @@ if __name__ == "__main__":
     
     equations = get_user_input()
     result = solve_equation(equations)
+    print(equations)
+
+    show_graph(equations)
 
     print(result)
