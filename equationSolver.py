@@ -1,6 +1,6 @@
 import re
 import numpy as np
-from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify
+from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify, solve
 import math
 import matplotlib.pyplot as plt
 
@@ -573,20 +573,87 @@ def solve_polynomial(equation):
 
 # graph stuff
 def show_graph(equations):
-        equation = equations[0]
-        lhs_subtract_rhs(equation)
-        lhs, rhs = equation.split('=')
+    """
+    Visualize equations using matplotlib.
+    Simple implementation for linear and polynomial equations.
+    Uses the existing lhs_subtract_rhs function.
+    """
+    plt.figure(figsize=(10, 8))
+    
+    # Create coordinate axes
+    plt.axhline(y=0, color='k', linestyle='-', alpha=0.3)
+    plt.axvline(x=0, color='k', linestyle='-', alpha=0.3)
+    plt.grid(True, alpha=0.3)
+    
+    # Use different colors for multiple equations
+    colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k']
+    
+    x = np.linspace(-10, 10, 1000)
+    
+    for i, equation in enumerate(equations):
+        color = colors[i % len(colors)]
+        
+        # Clean the equation
+        equation = preprocess_equation(equation)
+        print(f"Plotting: {equation}")
+        
+        try:
+            # Split equation into LHS and RHS to check for y
+            lhs, rhs = equation.split('=')
+            
+            # For equations of form y = f(x)
+            if lhs.strip() == 'y' or rhs.strip() == 'y':
+                if lhs.strip() == 'y':
+                    expr = parse_expr(rhs)
+                else:
+                    expr = parse_expr(lhs)
+                
+                f = lambdify('x', expr, 'numpy')
+                y_vals = f(x)
+                # Remove any complex or infinite values
+                mask = np.isfinite(y_vals) & np.isreal(y_vals)
+                plt.plot(x[mask], y_vals[mask], color=color, label=equation)
+            
+            # For other equations like f(x) = g(x)
+            else:
+                # Use your existing lhs_subtract_rhs function
+                expr = lhs_subtract_rhs(equation)
+                f = lambdify('x', expr, 'numpy')
+                y_vals = f(x)
+                mask = np.isfinite(y_vals) & np.isreal(y_vals)
+                plt.plot(x[mask], y_vals[mask], color=color, label=equation)
+                
+                # Also mark where function crosses x-axis (the solutions)
+                zeros = []
+                for j in range(len(x) - 1):
+                    if j < len(y_vals) - 1:  # Ensure we don't go out of bounds
+                        if (y_vals[j] < 0 and y_vals[j+1] > 0) or (y_vals[j] > 0 and y_vals[j+1] < 0):
+                            zero_x = (x[j] + x[j+1]) / 2
+                            zeros.append(zero_x)
+                
+                if zeros:
+                    plt.scatter(zeros, [0] * len(zeros), color=color, marker='o')
+        
+        except Exception as e:
+            print(f"Could not plot {equation}: {e}")
+            continue
+    
+    plt.title("Graph of Equations")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend(loc='best')
+    
+    # Set reasonable limits
+    y_min, y_max = plt.ylim()
+    if abs(y_min) > 50 or abs(y_max) > 50:
+        plt.ylim(-10, 10)
+    
+    #plt.show()
+    plt.savefig("graph.png")
+    
+    return plt.gcf()
 
-        print(equation) 
-        x = np.linspace(-5, 5)
-
-        y = eval(lhs)
-        plt.plot(x,y)
-
-        return plt.show()
-
-
-
+# fix for y = c e.g. y = 2
 
 #------------------------------------
 # main
@@ -615,6 +682,9 @@ def solve_equation(equations):
         return solve_basic_arithmetic(equations[0])
 
     equations = [preprocess_equation(equation) for equation in equations]
+
+    # show graph
+    fig = show_graph(equations)
 
 
 
@@ -646,6 +716,5 @@ if __name__ == "__main__":
     result = solve_equation(equations)
     print(equations)
 
-    show_graph(equations)
 
     print(result)
