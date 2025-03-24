@@ -42,9 +42,15 @@
                             <h5 class="mb-0">Visualization</h5>
                         </div>
                         <div class="card-body">
+                            {% if graphAvailable %}
                             <div class="graph-container">
                                 <img src="{{ url_for('static', filename='graph.png') }}" alt="Equation Graph">
                             </div>
+                            {% else %}
+                            <div class = "graph-container">
+                                <p>Graph Unavailable</p>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

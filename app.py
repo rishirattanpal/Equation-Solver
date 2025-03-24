@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from equationSolver import solve_equation, show_graph
-import re
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 
 def format_answer(answer):
@@ -47,15 +49,21 @@ def index():
 
         formattedEquations, formattedSolutions = format_answer(answer)
 
-        show_graph(equations)
+        try:
+            show_graph(equations)
+            graphAvailable = True
+        except Exception as e:
+            print(f"Failed to generate graph: {e}")
+            graphAvailable = False
+
         
         return render_template(
             "index.html",
             equations=formattedEquations,
-            solutions=formattedSolutions
+            solutions=formattedSolutions, graphAvailable=graphAvailable
         )
 
-    return render_template("index.html")
+    return render_template("index.html", graphAvailable = False)
 
 if __name__ == "__main__":
     app.run(debug=True)

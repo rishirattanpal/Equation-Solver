@@ -2,6 +2,8 @@ import re
 import numpy as np
 from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify, solve
 import math
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # user input functions
@@ -89,15 +91,6 @@ def solve_basic_arithmetic(expression):
 
 # solving sim/linear equations functions
 def rearrange_to_ax_b(eq):
-    """
-    Rearranges a linear equation into the form Ax = b.
-    
-    Args:
-        eq (sympy.Eq): The equation to rearrange.
-    
-    Returns:
-        sympy.Eq: The equation in the form Ax = b.
-    """
     lhs = eq.lhs
     rhs = eq.rhs
     
@@ -119,16 +112,6 @@ def rearrange_to_ax_b(eq):
     return Eq(lhs_rearranged, rhs_rearranged)
 
 def system_to_ax_b(equations):
-    """
-    Converts a system of equations into the form Ax = b.
-    
-    Args:
-        equations (list of str): The system of equations as strings.
-    
-    Returns:
-        A (numpy.ndarray): Coefficient matrix.
-        b (numpy.ndarray): Constant vector.
-    """
     sympy_eqs = []
 
     # Preprocess equations to handle implicit multiplication
@@ -170,23 +153,16 @@ def system_to_ax_b(equations):
     return A_np, b_np, sympy_eqs
 
 def row_reduction(A):
-# =============================================================================
-# A is a NumPy array that represents an augmented matrix of dimension n x (n+1)
-# associated with a linear system.  RowReduction returns B, a NumPy array that
-# represents the row echelon form of A.  RowReduction may not return correct
-# results if the the matrix A does not have a pivot in each column.
-# =============================================================================
-   
-    m = A.shape[0]  # A has m rows 
-    n = A.shape[1]  # It is assumed that A has m+1 columns
+ 
+    m = A.shape[0]  
+    n = A.shape[1]  
     
     B = np.copy(A).astype('float64')
 
-    # For each step of elimination, we find a suitable pivot, move it into
-    # position and create zeros for all entries below.
+    #find a suitable pivot, move it into position and create zeros for all entries below.
     
     for k in range(m):
-        # Set pivot as (k,k) entry
+        # Set pivot 
         pivot = B[k][k]
         pivot_row = k
         
@@ -195,7 +171,7 @@ def row_reduction(A):
             pivot_row += 1
             pivot = B[pivot_row][k]
             
-        # Swap row if needed
+        
         if (pivot_row != k):
             B = row_swap(B,k,pivot_row)
             
@@ -464,8 +440,8 @@ def newton_raphson(f, df, guess, delta = 1e-10, maxIter = 1000):
 def find_roots(coefficients, f, df, numPoints = 50, delta = 1e-10, maxIter = 100):
     
     bound = cauchy_bound(coefficients)
-    realRange = np.linspace(-bound, bound, numPoints)
-    imagRange = np.linspace(-bound, bound, numPoints)
+    realRange = np.linspace(float(-bound), float(bound), numPoints)
+    imagRange = np.linspace(-float(bound), float(bound), numPoints)
 
     roots = []
     counter = 0
@@ -573,21 +549,17 @@ def solve_polynomial(equation):
 
 # graph stuff
 def show_graph(equations):
-    """
-    Visualize equations using matplotlib.
-    Simple implementation for linear and polynomial equations.
-    Uses the existing lhs_subtract_rhs function.
-    """
+
     plt.figure(figsize=(6, 3))
     plt.tight_layout()  
 
     
-    # Create coordinate axes
+    # make axis
     plt.axhline(y=0, color='k', linestyle='-', alpha=0.3)
     plt.axvline(x=0, color='k', linestyle='-', alpha=0.3)
     plt.grid(True, alpha=0.3)
     
-    # Use different colors for multiple equations
+    # colours for each line
     colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k']
     
     x = np.linspace(-10, 10, 1000)
@@ -605,6 +577,7 @@ def show_graph(equations):
             
             # For equations of form y = f(x)
             if lhs.strip() == 'y' or rhs.strip() == 'y':
+                print("YOOOOOOOOO")
                 if lhs.strip() == 'y':
                     expr = parse_expr(rhs)
                 else:
@@ -619,6 +592,7 @@ def show_graph(equations):
             # For other equations like f(x) = g(x)
             else:
                 # Use your existing lhs_subtract_rhs function
+                print("this is the ting that works")
                 expr = lhs_subtract_rhs(equation)
                 f = lambdify('x', expr, 'numpy')
                 y_vals = f(x)

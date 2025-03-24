@@ -1,11 +1,15 @@
 Make text look nicer
 format results
+
 graph
 
 add e, log, 
 
 inequalities
+error handling
 
 3x+18y=z
 7y+3z=9x
 4z*6y=3
+
+understand graph and improve it to be able to handle my types of equations
