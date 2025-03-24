@@ -578,7 +578,9 @@ def show_graph(equations):
     Simple implementation for linear and polynomial equations.
     Uses the existing lhs_subtract_rhs function.
     """
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(6, 3))
+    plt.tight_layout()  
+
     
     # Create coordinate axes
     plt.axhline(y=0, color='k', linestyle='-', alpha=0.3)
@@ -649,9 +651,10 @@ def show_graph(equations):
         plt.ylim(-10, 10)
     
     #plt.show()
-    plt.savefig("graph.png")
+    plt.savefig("static/graph.png")
+    plt.close()
     
-    return plt.gcf()
+    return True
 
 # fix for y = c e.g. y = 2
 
@@ -682,10 +685,6 @@ def solve_equation(equations):
         return solve_basic_arithmetic(equations[0])
 
     equations = [preprocess_equation(equation) for equation in equations]
-
-    # show graph
-    fig = show_graph(equations)
-
 
 
 

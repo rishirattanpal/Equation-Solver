@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
-from equationSolver import solve_equation
+from equationSolver import solve_equation, show_graph
 import re
-
 
 
 def format_answer(answer):
@@ -48,6 +47,8 @@ def index():
 
         formattedEquations, formattedSolutions = format_answer(answer)
 
+        show_graph(equations)
+        
         return render_template(
             "index.html",
             equations=formattedEquations,
