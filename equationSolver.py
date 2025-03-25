@@ -3,7 +3,7 @@ import numpy as np
 from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify, solve
 import math
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # user input functions
@@ -549,66 +549,98 @@ def solve_polynomial(equation):
 
 # graph stuff
 def show_graph(equations):
-
     plt.figure(figsize=(6, 3))
-    plt.tight_layout()  
-
+    #plt.tight_layout()
     
-    # make axis
-    plt.axhline(y=0, color='k', linestyle='-', alpha=0.3)
-    plt.axvline(x=0, color='k', linestyle='-', alpha=0.3)
-    plt.grid(True, alpha=0.3)
+    # Make axis
+    plt.axhline(y=0, color='k')
+    plt.axvline(x=0, color='k')
+    plt.grid(True)
     
-    # colours for each line
+    # Colors for each line
     colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k']
     
-    x = np.linspace(-10, 10, 1000)
+    x_vals = np.linspace(-10, 10, 1000)
     
     for i, equation in enumerate(equations):
         color = colors[i % len(colors)]
         
-        # Clean the equation
-        equation = preprocess_equation(equation)
-        print(f"Plotting: {equation}")
-        
         try:
-            # Split equation into LHS and RHS to check for y
-            lhs, rhs = equation.split('=')
+            # Preprocess the equation
+            eq = preprocess_equation(equation)
+            lhs, rhs = eq.split('=')
+            lhs = lhs.strip()
+            rhs = rhs.strip()
             
-            # For equations of form y = f(x)
-            if lhs.strip() == 'y' or rhs.strip() == 'y':
-                print("YOOOOOOOOO")
-                if lhs.strip() == 'y':
-                    expr = parse_expr(rhs)
+            # x = c where c can be decimal, neg or pos
+            if lhs == 'x' and rhs.lstrip('-').replace('.', '').isdigit(): 
+                x_const = float(rhs)
+                plt.axvline(x=x_const, color=color, label=f'x = {x_const}')
+                continue
+            elif rhs == 'x' and lhs.lstrip('-').replace('.', '').isdigit():
+                x_const = float(lhs)
+                plt.axvline(x=x_const, color=color, label=f'x = {x_const}')
+                continue
+                
+            # y = c
+            if lhs == 'y' and rhs.lstrip('-').replace('.', '').isdigit():
+                y_const = float(rhs)
+                plt.axhline(y=y_const, color=color, label=f'y = {y_const}')
+                continue
+            elif rhs == 'y' and lhs.lstrip('-').replace('.', '').isdigit():
+                y_const = float(lhs)
+                plt.axhline(y=y_const, color=color, label=f'y = {y_const}')
+                continue
+                
+            # y = or = y 
+            if 'y' in eq:
+                if lhs == 'y':
+                    y_expr = rhs
                 else:
-                    expr = parse_expr(lhs)
+                    y_expr = lhs
                 
-                f = lambdify('x', expr, 'numpy')
-                y_vals = f(x)
-                # Remove any complex or infinite values
-                mask = np.isfinite(y_vals) & np.isreal(y_vals)
-                plt.plot(x[mask], y_vals[mask], color=color, label=equation)
+                # Evaluate the expression
+                y_points = []
+                for x_val in x_vals:
+                    try:
+                        y_val = eval(y_expr.replace('x', f'({x_val})'), {'math': math})
+                        y_points.append(y_val)
+                    except:
+                        y_points.append(np.nan)
+                
+                plt.plot(x_vals, y_points, color=color, label=equation)
             
-            # For other equations like f(x) = g(x)
             else:
-                # Use your existing lhs_subtract_rhs function
-                print("this is the ting that works")
-                expr = lhs_subtract_rhs(equation)
-                f = lambdify('x', expr, 'numpy')
-                y_vals = f(x)
-                mask = np.isfinite(y_vals) & np.isreal(y_vals)
-                plt.plot(x[mask], y_vals[mask], color=color, label=equation)
+                # Equation without y (f(x) = g(x))
+                lhs_y = []
+                rhs_y = []
+                for x_val in x_vals:
+                    try:
+                        lhs_val = eval(lhs.replace('x', f'({x_val})'), {'math': math})
+                        rhs_val = eval(rhs.replace('x', f'({x_val})'), {'math': math})
+                        lhs_y.append(lhs_val)
+                        rhs_y.append(rhs_val)
+                    except:
+                        lhs_y.append(np.nan)
+                        rhs_y.append(np.nan)
                 
-                # Also mark where function crosses x-axis (the solutions)
-                zeros = []
-                for j in range(len(x) - 1):
-                    if j < len(y_vals) - 1:  # Ensure we don't go out of bounds
-                        if (y_vals[j] < 0 and y_vals[j+1] > 0) or (y_vals[j] > 0 and y_vals[j+1] < 0):
-                            zero_x = (x[j] + x[j+1]) / 2
-                            zeros.append(zero_x)
+                # Plot both sides
+                plt.plot(x_vals, lhs_y, color=color, linestyle='-', label=f'{lhs} (LHS)')
+                #plt.plot(x_vals, rhs_y, color=color, linestyle='--', label=f'{rhs} (RHS)')
                 
-                if zeros:
-                    plt.scatter(zeros, [0] * len(zeros), color=color, marker='o')
+                # Find and plot intersection points
+                diffs = np.array(lhs_y) - np.array(rhs_y)
+                sign_changes = np.where(np.diff(np.sign(diffs)))[0]
+                
+                for idx in sign_changes:
+                    if idx < len(x_vals) - 1:
+                        x0, x1 = x_vals[idx], x_vals[idx+1]
+                        y0, y1 = diffs[idx], diffs[idx+1]
+                        
+                        if y0 != y1:
+                            x_root = x0 - y0 * (x1 - x0) / (y1 - y0)
+                            y_root = eval(lhs.replace('x', f'({x_root})'), {'math': math})
+                            plt.plot(x_root, y_root, 'ro', markersize=5)
         
         except Exception as e:
             print(f"Could not plot {equation}: {e}")
@@ -617,19 +649,24 @@ def show_graph(equations):
     plt.title("Graph of Equations")
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.legend(loc='best')
+    
+    # Adjust legend position and size
+    #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
     
     # Set reasonable limits
-    y_min, y_max = plt.ylim()
-    if abs(y_min) > 50 or abs(y_max) > 50:
+    current_y_lim = plt.ylim()
+    if abs(current_y_lim[0]) > 50 or abs(current_y_lim[1]) > 50:
         plt.ylim(-10, 10)
     
-    #plt.show()
+    current_x_lim = plt.xlim()
+    if abs(current_x_lim[0]) > 50 or abs(current_x_lim[1]) > 50:
+        plt.xlim(-10, 10)
+    
     plt.savefig("static/graph.png")
+    plt.show()
     plt.close()
     
     return True
-
 # fix for y = c e.g. y = 2
 
 #------------------------------------
@@ -691,3 +728,4 @@ if __name__ == "__main__":
 
 
     print(result)
+    show_graph(equations)

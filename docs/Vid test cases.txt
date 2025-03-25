@@ -1,5 +1,12 @@
 Vid test cases
 
+Error handling:
+if no equation entered then be like enter a ting u nob
+
+get this to work for graph
+2*x = y
+y = 2
+
 show basic arithmetic:
 2+2 = 4 
 
