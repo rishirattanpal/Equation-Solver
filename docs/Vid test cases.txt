@@ -1,0 +1,58 @@
+Vid test cases
+
+show basic arithmetic:
+2+2 = 4 
+
+show linear equations
+
+2x + 23 = 43
+x=10
+
+show sim equations:
+x = 0.5 * y
+y = 0.5 * x + 3
+x = 2.00
+y = 4.00
+
+x - y + z = 3 
+2x + y + 8z = 18 
+4x + 2y - 3z = -2
+x=1.00
+y=2.00
+z=2.00
+
+x + y = 2
+x + y = 5
+no solution
+
+
+x + y = 2
+2x + 2y = 4
+x = 2
+y = 0
+(infinite sols)
+
+
+show quadratics:
+
+x^2 + 2x + 1 = 0
+x = -1
+(one root)
+
+
+x^2 + 4x + 2 = 0
+x = -0.586, 3.414
+(two roots)
+
+
+
+
+
+show polynomials:
+
+x**3 - 6*x**2 + 11x - 6 = 0
+x = 1, 2, 3
+
+
+x**5 - 3*x**4 + x**3 - x**2 + 2*x - 2 = 0
+x = 2.703, 0.6973+0.5421i, 0.6973−0.5421i, −0.5489+0.8044i, −0.5489−0.8044i
