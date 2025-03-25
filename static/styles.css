@@ -18,17 +18,19 @@ body {
 /* Typography */
 .app-title {
   color: #dfe6e9;
+  font-size: 3rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid #636e72;
   padding-bottom: 0.5rem;
 }
 
-.section-title {
-  font-size: 1.4rem;
-  color: #dfe6e9;
-  margin-bottom: 1rem;
-  font-weight: 500;
+pre{
+  font-size: 1.8rem;
+}
+
+h5{
+  font-size: 2rem;
 }
 
 /* First row - Input and Graph */
@@ -120,7 +122,7 @@ pre {
 #keys {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  gap: 16px;
   max-width: 600px;
   margin: 0 auto;
 }
@@ -198,6 +200,19 @@ pre {
 /* Text colors */
 .text-muted {
   color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Add this to your styles.css file */
+textarea.form-control {
+  font-size: 1.8rem; 
+  font-family: monospace; 
+  white-space: pre; 
+}
+
+
+textarea.form-control:hover,
+textarea.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 

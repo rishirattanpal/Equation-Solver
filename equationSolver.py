@@ -54,6 +54,9 @@ def classify_equation(equation):
 
 def preprocess_equation(equation):
 
+    if '=' not in equation:
+        raise ValueError("No equation entered")
+
     equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation) # convert 2x to x**2
     equation = re.sub(r'\^', r'**', equation)
 
@@ -365,8 +368,10 @@ def solve_quadratic(equation):
 
         if discriminant > 0:
 
-            x1 = round(((-b + math.sqrt(discriminant)) / (2*a)), 3)
-            x2 = round(((-b - math.sqrt(discriminant)) / (2*a)), 3)
+            x1 = round(float(((-b + math.sqrt(discriminant)) / (2*a))), 3)
+            print(x1)
+            x2 = round(float(((-b - math.sqrt(discriminant)) / (2*a))), 3)
+            print(x2)
 
             result['solutions'] = [x1, x2]
 
@@ -600,6 +605,7 @@ def show_graph(equations):
                     y_expr = lhs
                 
                 # Evaluate the expression
+                print("y guy")
                 y_points = []
                 for x_val in x_vals:
                     try:
@@ -612,6 +618,7 @@ def show_graph(equations):
             
             else:
                 # Equation without y (f(x) = g(x))
+                print("no y guy")
                 lhs_y = []
                 rhs_y = []
                 for x_val in x_vals:

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from equationSolver import solve_equation, show_graph
 import matplotlib
 matplotlib.use('Agg')
@@ -34,12 +34,21 @@ def format_answer(answer):
 
 
 app = Flask(__name__)
+app.secret_key="dababy"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         # Get equations from the form
-        equations = request.form["equations"].split("\n")
+        rawInput = request.form.get("equations", "").strip()
+
+        if not rawInput:
+            flash("Please enter an equation")
+            return render_template("index.html", graphAvailable = False)
+
+        equations = [eq.strip() for eq in rawInput.split("\n") if eq.strip()]
+
+
         equations = [eq.replace('\r', '') for eq in equations]
         print(f"Equations: {equations}")
 
