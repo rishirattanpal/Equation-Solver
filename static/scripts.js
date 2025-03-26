@@ -1,8 +1,8 @@
 // Equation Solver Calculator Functions
+let lastAnswer = null;
 
 
-
-function appendToEquation(input) {
+function append_to_equation(input) {
     const equationsArea = document.getElementById("equations");
     
     // Handle special cases
@@ -35,7 +35,7 @@ function appendToEquation(input) {
 
 
 
-function clearEquation() {
+function clear_equation() {
     document.getElementById("equations").value = "";
     document.getElementById("equations").focus();
 }
@@ -49,7 +49,8 @@ function backspace() {
 
 
 
-function solveEquation() {
+function solve_equation() {
+    const equationsArea = document.getElementById("equations");
     document.getElementById("equationForm").submit();
 }
 
@@ -67,10 +68,29 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle Enter key to add a new line instead of submitting the form
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            appendToEquation('\\n');
+            append_to_equation('\\n');
         }
     });
     
     // Initialize focus on the textarea when page loads
     equationsArea.focus();
 });
+
+
+async function get_prev_ans() {  // Changed to snake_case
+    const equationsArea = document.getElementById("equations");
+    
+    try {
+        const response = await fetch('/get_last_answer');
+        const data = await response.json();
+        
+        if (data.lastAnswer) {
+            equationsArea.value += data.lastAnswer;
+            equationsArea.focus();
+        } else {
+            alert("No previous answer available");
+        }
+    } catch (error) {
+        console.error("Error fetching last answer:", error);
+    }
+}

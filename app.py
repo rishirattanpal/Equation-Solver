@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, session
 from equationSolver import solve_equation, show_graph
 import matplotlib
 matplotlib.use('Agg')
@@ -20,12 +20,15 @@ def format_answer(answer):
         formattedEquations = "\n".join(inputEquations)
     else:
         formattedEquations = str(inputEquations)
+    
 
     # format solutiin
     if isinstance(solutions, dict):
         formattedSolutions = "\n".join([f"{var} = {value}" for var, value in solutions.items()])
     elif isinstance(solutions, list):
         formattedSolutions = "\n".join([f"x = {value}" for value in solutions])
+    elif isinstance(solutions, str):
+        formattedSolutions = solutions
     else:
         formattedSolutions = "no solution found"
 
@@ -36,6 +39,12 @@ def format_answer(answer):
 
 app = Flask(__name__)
 app.secret_key="dababy"
+#app.config["SESSION_TYPE"] = "filesystem"
+
+@app.route('/get_last_answer')
+def get_last_answer():
+    return {'lastAnswer': session.get('lastAnswer', '')}
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -51,30 +60,44 @@ def index():
         print(f"Equations: {equations}")
 
 
-
         equations = [eq.replace('\r', '') for eq in equations]
         print(f"Equations: {equations}")
 
-        # Solve the equations
-        answer = solve_equation(equations)
-        print(f"Answer: {answer}")
-
-        formattedEquations, formattedSolutions = format_answer(answer)
-        print(f"formatted equations: {formattedEquations}")
-
         try:
-            show_graph(equations)
-            graphAvailable = True
-        except Exception as e:
-            print(f"Failed to generate graph: {e}")
-            graphAvailable = False
 
-        
-        return render_template(
-            "index.html",
-            equations=formattedEquations,
-            solutions=formattedSolutions, graphAvailable=graphAvailable
-        )
+            # Solve the equations
+            answer = solve_equation(equations)
+            print(f"Answer: {answer}")
+
+
+            formattedEquations, formattedSolutions = format_answer(answer)
+            print(f"formatted equations: {formattedEquations}")
+
+            if "note" in answer:
+                note = answer['note']
+                print(f"note {note}")
+            else:
+                note = ""
+
+            try:
+                show_graph(equations)
+                graphAvailable = True
+            except Exception as e:
+                print(f"Failed to generate graph: {e}")
+                graphAvailable = False
+
+            
+            return render_template(
+                "index.html",
+                equations=formattedEquations,
+                solutions=formattedSolutions, graphAvailable=graphAvailable, note=note
+            )
+        except ValueError as e:
+            if "No equation entered" in str(e):
+                flash("Invalid equation entered")
+            else:
+                flash(f"Error: {str(e)}")
+            return render_template("index.html", grSaphAvailable=False)
 
     return render_template("index.html", graphAvailable = False)
 

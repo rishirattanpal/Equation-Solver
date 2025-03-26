@@ -239,7 +239,7 @@ def solve_system(A,B):
     for row in R:
         # no solutions
         if all(c == 0 for c in row[:-1]) and row[-1] != 0:
-            return "System has no solution (inconsistent system).", infiniteSolutions
+            return "System has no solution", infiniteSolutions
         # infinite solutions
         if all(c == 0 for c in row[:-1]) and row[-1] == 0:
             infiniteSolutions = True
@@ -268,16 +268,18 @@ def solve_systems_and_linear(equations):
     result = {
         "equation" : equations
     }
+    print(f"result: {result}")
 
 
     if isinstance(answer, str):
-        return {"solutions": answer}
+        result["solutions"] = answer
+        return result
     
 
     result["solutions"] = {str(var): round(answer[i].item(), 2) for i, var in enumerate(variables)}
     
     if infiniteSols:
-        result["note"] = "This system has infinitely many solutions"
+        result["note"] = "System has infinite solutions"
 
     return result
     
@@ -377,9 +379,11 @@ def solve_quadratic(equation):
 
         
         elif discriminant == 0:
+            x=[]
             x1 = round(((-b) / (2*a)), 3)
+            x.append(x1)
             
-            result['solutions'] = x1
+            result['solutions'] = x
 
         else:
             result['solutions'] = "No real roots"

@@ -95,6 +95,10 @@
                             {% else %}
                                 <p class="text-muted mb-0">Solutions will appear here</p>
                             {% endif %}
+
+                            {% if note %}
+                                <pre class="mb-0">{{ note }}</pre>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -108,40 +112,40 @@
                         <div class="card-body">
                             <div id="calculator" class="mx-auto">
                                 <div id="keys">
-                                    <button onclick="appendToEquation('x')" class="variable-btn">x</button>
-                                    <button onclick="appendToEquation('y')" class="variable-btn">y</button>
-                                    <button onclick="appendToEquation('z')" class="variable-btn">z</button>
-                                    <button onclick="appendToEquation('=')" class="function-btn">=</button>
-                                    <button onclick="appendToEquation('\\n')" class="function-btn">New Line</button>
+                                    <button onclick="append_to_equation('x')" class="variable-btn">x</button>
+                                    <button onclick="append_to_equation('y')" class="variable-btn">y</button>
+                                    <button onclick="append_to_equation('z')" class="variable-btn">z</button>
+                                    <button onclick="append_to_equation('=')" class="function-btn">=</button>
+                                    <button onclick="append_to_equation('\\n')" class="function-btn">New Line</button>
                                     
-                                    <button onclick="appendToEquation('(')" class="function-btn">(</button>
-                                    <button onclick="appendToEquation(')')" class="function-btn">)</button>
-                                    <button onclick="appendToEquation('^')" class="function-btn">^</button>
-                                    <button onclick="appendToEquation('/')" class="operator-btn">÷</button>
-                                    <button onclick="appendToEquation('\\sqrt{}')" class="function-btn">√</button>
+                                    <button onclick="append_to_equation('(')" class="function-btn">(</button>
+                                    <button onclick="append_to_equation(')')" class="function-btn">)</button>
+                                    <button onclick="append_to_equation('^')" class="function-btn">^</button>
+                                    <button onclick="append_to_equation('/')" class="operator-btn">÷</button>
+                                    <button onclick="append_to_equation('\\sqrt{}')" class="function-btn">√</button>
                                     
-                                    <button onclick="appendToEquation('7')">7</button>
-                                    <button onclick="appendToEquation('8')">8</button>
-                                    <button onclick="appendToEquation('9')">9</button>
-                                    <button onclick="appendToEquation('-')" class="operator-btn">−</button>
-                                    <button onclick="appendToEquation('\\frac{}{}')" class="function-btn">⁄</button>
+                                    <button onclick="append_to_equation('7')">7</button>
+                                    <button onclick="append_to_equation('8')">8</button>
+                                    <button onclick="append_to_equation('9')">9</button>
+                                    <button onclick="append_to_equation('-')" class="operator-btn">−</button>
+                                    <button onclick="append_to_equation('\\frac{}{}')" class="function-btn">⁄</button>
                                     
-                                    <button onclick="appendToEquation('4')">4</button>
-                                    <button onclick="appendToEquation('5')">5</button>
-                                    <button onclick="appendToEquation('6')">6</button>
-                                    <button onclick="appendToEquation('*')" class="operator-btn">×</button>
-                                    <button onclick="getPrevAns()" class="function-btn">ANS</button>
+                                    <button onclick="append_to_equation('4')">4</button>
+                                    <button onclick="append_to_equation('5')">5</button>
+                                    <button onclick="append_to_equation('6')">6</button>
+                                    <button onclick="append_to_equation('*')" class="operator-btn">×</button>
+                                    <button onclick="get_prev_answer()" class="function-btn">ANS</button>
                                     
-                                    <button onclick="appendToEquation('1')">1</button>
-                                    <button onclick="appendToEquation('2')">2</button>
-                                    <button onclick="appendToEquation('3')">3</button>
-                                    <button onclick="appendToEquation('+')" class="operator-btn">+</button>
-                                    <button onclick="clearEquation()" class="clear-btn">C</button>
+                                    <button onclick="append_to_equation('1')">1</button>
+                                    <button onclick="append_to_equation('2')">2</button>
+                                    <button onclick="append_to_equation('3')">3</button>
+                                    <button onclick="append_to_equation('+')" class="operator-btn">+</button>
+                                    <button onclick="clear_equation()" class="clear-btn">C</button>
                                     
-                                    <button onclick="appendToEquation('0')" class="wide-btn">0</button>
-                                    <button onclick="appendToEquation('.')">.</button>
+                                    <button onclick="append_to_equation('0')" class="wide-btn">0</button>
+                                    <button onclick="append_to_equation('.')">.</button>
                                     <button onclick="backspace()" class="function-btn">⌫</button>
-                                    <button onclick="solveEquation()" class="equal-btn">Solve</button>
+                                    <button onclick="solve_equation()" class="equal-btn">Solve</button>
                                 </div>
                             </div>
                         </div>
