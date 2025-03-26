@@ -3,6 +3,8 @@ Vid test cases
 Error handling:
 if no equation entered then be like enter a ting u nob
 
+ADD ERROR HANDLING FOR INVALID EQUAION
+
 get this to work for graph
 2*x = y
 y = 2
@@ -54,6 +56,14 @@ x = -0.586, 3.414
 
 
 
+FIXING TING
+
+answer: {'equation': ['x = 0.5*y', 'y = 0.5*x + 3'], 'solutions': {'x': 2.0, 'y': 4.0}}
+
+answer: {'solutions': 'System has no solution (inconsistent system).'}
+
+
+
 
 show polynomials:
 
@@ -63,3 +73,12 @@ x = 1, 2, 3
 
 x**5 - 3*x**4 + x**3 - x**2 + 2*x - 2 = 0
 x = 2.703, 0.6973+0.5421i, 0.6973−0.5421i, −0.5489+0.8044i, −0.5489−0.8044i
+
+
+Talk about features i will include:
+get rid of -0
+going to add graph support for z
+add intersection for sim equation
+add inequalitiy support
+clear button on enter card and retain input
+

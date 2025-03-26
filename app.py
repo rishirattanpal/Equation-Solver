@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def format_answer(answer):
+    print(f"answer: {answer}")
     if "result" in answer:
         formattedEquations = answer["expression"]
         formattedSolutions = str(answer["result"])
@@ -47,6 +48,8 @@ def index():
             return render_template("index.html", graphAvailable = False)
 
         equations = [eq.strip() for eq in rawInput.split("\n") if eq.strip()]
+        print(f"Equations: {equations}")
+
 
 
         equations = [eq.replace('\r', '') for eq in equations]
@@ -57,6 +60,7 @@ def index():
         print(f"Answer: {answer}")
 
         formattedEquations, formattedSolutions = format_answer(answer)
+        print(f"formatted equations: {formattedEquations}")
 
         try:
             show_graph(equations)

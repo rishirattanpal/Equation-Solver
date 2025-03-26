@@ -271,7 +271,7 @@ def solve_systems_and_linear(equations):
 
 
     if isinstance(answer, str):
-        return {"error": answer}
+        return {"solutions": answer}
     
 
     result["solutions"] = {str(var): round(answer[i].item(), 2) for i, var in enumerate(variables)}
@@ -396,6 +396,9 @@ def clean_roots(roots, tol = 1e-3):
     seen = set()
 
     for root in roots:
+        if root == -0.0:
+            root = 0
+        
         if abs(root.imag) < tol:
             root = root.real
     
@@ -409,6 +412,8 @@ def clean_roots(roots, tol = 1e-3):
         if root_str not in seen:
             seen.add(root_str)
             cleaned.append(rounded)
+        
+        print(cleaned)
 
     return cleaned
 

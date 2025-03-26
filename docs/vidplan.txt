@@ -1,0 +1,49 @@
+Vid plan:
+
+Statement of ethical compliance:
+I state I will follow the University of Liverpool’s ethical guidance as detailed here https://student.csc.liv.ac.uk/internal/modules/comp390/2024-25/ethics.php
+My project will be in the following data/human participant category, A2
+
+
+short introduction:
+
+Overview of project - 
+The aim of my project is to make an equation solver, this will be a web application that will assist 
+users ranging from students to professionals in solving various types of equations
+
+motivation 
+
+conclusion - my final product realisies my inital vision however I overestimated the time it 
+would take to learn certain libraries/frameworks in 
+
+what i have achieved:
+working backend that supports:
+simple arithmetic first
+linear
+system of linear
+quadratic 
+polynomial
+working frontend that is aesthetically styled with bootsrap and css
+calculator for input
+graph visuliation
+version controlled with git successfully 
+
+what i aspire to achieve:
+going to add graph support for z
+add intersection for sim equation
+add inequalitiy support
+clear button on enter card and retain input
+
+
+Show original UI design vs final UI design:
+
+newton rhapson slide
+gaussian elimination slide
+
+Software demonstration:
+demonstrate no input error handling 
+demonstrate simple arithmetic first
+demonstrate linear
+demonstrate system of linear
+demonstrate quadratic 
+demonstrate polynomial
