@@ -50,7 +50,6 @@ function backspace() {
 
 
 function solve_equation() {
-    const equationsArea = document.getElementById("equations");
     document.getElementById("equationForm").submit();
 }
 

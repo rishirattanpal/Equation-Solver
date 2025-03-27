@@ -1,32 +1,43 @@
 from flask import Flask, render_template, request, flash, session
-from equationSolver import solve_equation, show_graph
+from equationSolver import solve_equation, show_graph, OPERATORS
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
+import re
 
 def format_answer(answer):
     print(f"answer: {answer}")
     if "result" in answer:
-        formattedEquations = answer["expression"]
-        formattedSolutions = str(answer["result"])
-        return formattedEquations, formattedSolutions
+        return answer["expression"], str(answer["result"])
     
     inputEquations = answer.get("equation", [])
     solutions = answer.get("solutions", {})
-
-    # format equation
-    if isinstance(inputEquations, list):
-        formattedEquations = "\n".join(inputEquations)
-    else:
-        formattedEquations = str(inputEquations)
+    operators = answer.get("operators", [])
     
+    # replace '=' with og operator
+    if isinstance(inputEquations, list):
+        formattedEquations = []
+        for i, eq in enumerate(inputEquations):
+            op = operators[i] 
 
-    # format solutiin
+            formattedEq = eq.replace('=', f'{op}') 
+            formattedEquations.append(formattedEq)
+        
+        formattedEquations = "\n".join(formattedEquations)  
+    else:
+        op = operators[0] if operators else "="
+        formattedEquations = inputEquations.replace('=', f' {op} ')
+    
+    # Format solutions with operators
     if isinstance(solutions, dict):
-        formattedSolutions = "\n".join([f"{var} = {value}" for var, value in solutions.items()])
+        formattedSolutions = []
+        for i, (var, value) in enumerate(solutions.items()):
+            op = operators[i] if i < len(operators) else "="
+            formattedSolutions.append(f"{var} {op} {value}")
+        formattedSolutions = "\n".join(formattedSolutions)
     elif isinstance(solutions, list):
-        formattedSolutions = "\n".join([f"x = {value}" for value in solutions])
+        op = operators[0] if operators else "="
+        formattedSolutions = "\n".join([f"x {op} {value}" for value in solutions])
     elif isinstance(solutions, str):
         formattedSolutions = solutions
     else:
@@ -51,6 +62,7 @@ def index():
     if request.method == "POST":
         # Get equations from the form
         rawInput = request.form.get("equations", "").strip()
+        print(f"rawinput: {rawInput}")
 
         if not rawInput:
             flash("Please enter an equation")
@@ -68,6 +80,10 @@ def index():
             # Solve the equations
             answer = solve_equation(equations)
             print(f"Answer: {answer}")
+
+
+            if "result" in answer: # store for answer key
+                session['lastAnswer'] = str(answer["result"])
 
 
             formattedEquations, formattedSolutions = format_answer(answer)

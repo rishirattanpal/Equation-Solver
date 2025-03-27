@@ -1,10 +1,21 @@
 import re
 import numpy as np
-from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify, solve
+from sympy import symbols, Eq, sympify, parse_expr, S, Add, expand, Pow, Symbol, diff, lambdify
 import math
 import matplotlib
 #matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
+# operator stuff
+OPERATORS = ["<=", ">=", ">", "<", "="]
+
+def get_operator(equation):
+    for op in OPERATORS:
+        if op in equation:
+            return op
+    else:
+        return None
+    
 
 # user input functions
 def get_user_input():
@@ -54,25 +65,29 @@ def classify_equation(equation):
 
 def preprocess_equation(equation):
 
-    if '=' not in equation:
+    # check operator
+    op = get_operator(equation)
+    if op is None:
         raise ValueError("No equation entered")
+    
 
-    equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation) # convert 2x to x**2
+
+    # preprocess symbols
+    equation = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', equation) 
     equation = re.sub(r'\^', r'**', equation)
-
     equation = re.sub(r'\)\s*\(', r')*(', equation)
 
-    lhs, rhs = equation.split('=')
+    lhs, rhs = [part.strip() for part in equation.split(op, 1)]
 
-    lhs_expr = sympify(lhs.strip())
-    rhs_expr = sympify(rhs.strip())
+    lhsExpr = sympify(lhs)
+    rhsExpr = sympify(rhs)
 
     # Step 6: Expand LHS and RHS
-    lhs_expr = expand(lhs_expr)
-    rhs_expr = expand(rhs_expr)
+    lhsExpr = expand(lhsExpr)
+    rhsExpr = expand(rhsExpr)
 
     # Step 7: Reconstruct the equation as a string
-    expanded_equation = f"{lhs_expr} = {rhs_expr}"
+    expanded_equation = f"{lhsExpr} {op} {rhsExpr}"
 
     return expanded_equation
 
@@ -255,7 +270,9 @@ def solve_system(A,B):
 
 def solve_systems_and_linear(equations):
     A, b, sympy_eqs = system_to_ax_b(equations)  # Get augmented matrix
-    
+
+
+
     # Collect variables from the equations
     variables = set().union(*[eq.free_symbols for eq in sympy_eqs])
     variables = sorted(variables, key=lambda x: str(x))
@@ -280,9 +297,13 @@ def solve_systems_and_linear(equations):
     
     if infiniteSols:
         result["note"] = "System has infinite solutions"
+    
+    operators = [get_operator(eq) for eq in equations]
+    result["operators"] = operators
 
     return result
     
+
 
 # matrix manipulation functions
 def row_swap(A,k,l):
@@ -561,128 +582,154 @@ def solve_polynomial(equation):
     return result
 
 
+
 # graph stuff
 def show_graph(equations):
     plt.figure(figsize=(6, 3))
-    #plt.tight_layout()
     
-    # Make axis
-    plt.axhline(y=0, color='k')
-    plt.axvline(x=0, color='k')
+    # Setup axes and grid
+    plt.axhline(y=0, color='w', linewidth=0.5)
+    plt.axvline(x=0, color='w', linewidth=0.5)
     plt.grid(True)
     
-    # Colors for each line
+    # Color cycle
     colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k']
     
+    # Plot range
     x_vals = np.linspace(-10, 10, 1000)
     
     for i, equation in enumerate(equations):
         color = colors[i % len(colors)]
         
         try:
-            # Preprocess the equation
+            # Preprocess equation
             eq = preprocess_equation(equation)
-            lhs, rhs = eq.split('=')
-            lhs = lhs.strip()
-            rhs = rhs.strip()
             
-            # x = c where c can be decimal, neg or pos
-            if lhs == 'x' and rhs.lstrip('-').replace('.', '').isdigit(): 
-                x_const = float(rhs)
-                plt.axvline(x=x_const, color=color, label=f'x = {x_const}')
-                continue
-            elif rhs == 'x' and lhs.lstrip('-').replace('.', '').isdigit():
-                x_const = float(lhs)
-                plt.axvline(x=x_const, color=color, label=f'x = {x_const}')
+            # Handle special cases first
+            if handle_constant_equation(eq, color):
                 continue
                 
-            # y = c
-            if lhs == 'y' and rhs.lstrip('-').replace('.', '').isdigit():
-                y_const = float(rhs)
-                plt.axhline(y=y_const, color=color, label=f'y = {y_const}')
-                continue
-            elif rhs == 'y' and lhs.lstrip('-').replace('.', '').isdigit():
-                y_const = float(lhs)
-                plt.axhline(y=y_const, color=color, label=f'y = {y_const}')
+            # Handle y = f(x) equations
+            if handle_y_equation(eq, x_vals, color, equation):
                 continue
                 
-            # y = or = y 
-            if 'y' in eq:
-                if lhs == 'y':
-                    y_expr = rhs
-                else:
-                    y_expr = lhs
-                
-                # Evaluate the expression
-                print("y guy")
-                y_points = []
-                for x_val in x_vals:
-                    try:
-                        y_val = eval(y_expr.replace('x', f'({x_val})'), {'math': math})
-                        y_points.append(y_val)
-                    except:
-                        y_points.append(np.nan)
-                
-                plt.plot(x_vals, y_points, color=color, label=equation)
+            # Handle general f(x) = g(x) case
+            handle_general_equation(eq, x_vals, color)
             
-            else:
-                # Equation without y (f(x) = g(x))
-                print("no y guy")
-                lhs_y = []
-                rhs_y = []
-                for x_val in x_vals:
-                    try:
-                        lhs_val = eval(lhs.replace('x', f'({x_val})'), {'math': math})
-                        rhs_val = eval(rhs.replace('x', f'({x_val})'), {'math': math})
-                        lhs_y.append(lhs_val)
-                        rhs_y.append(rhs_val)
-                    except:
-                        lhs_y.append(np.nan)
-                        rhs_y.append(np.nan)
-                
-                # Plot both sides
-                plt.plot(x_vals, lhs_y, color=color, linestyle='-', label=f'{lhs} (LHS)')
-                #plt.plot(x_vals, rhs_y, color=color, linestyle='--', label=f'{rhs} (RHS)')
-                
-                # Find and plot intersection points
-                diffs = np.array(lhs_y) - np.array(rhs_y)
-                sign_changes = np.where(np.diff(np.sign(diffs)))[0]
-                
-                for idx in sign_changes:
-                    if idx < len(x_vals) - 1:
-                        x0, x1 = x_vals[idx], x_vals[idx+1]
-                        y0, y1 = diffs[idx], diffs[idx+1]
-                        
-                        if y0 != y1:
-                            x_root = x0 - y0 * (x1 - x0) / (y1 - y0)
-                            y_root = eval(lhs.replace('x', f'({x_root})'), {'math': math})
-                            plt.plot(x_root, y_root, 'ro', markersize=5)
-        
         except Exception as e:
             print(f"Could not plot {equation}: {e}")
             continue
     
+    # Finalize graph
     plt.title("Graph of Equations")
     plt.xlabel("x")
     plt.ylabel("y")
+    adjust_axes_limits()
     
-    # Adjust legend position and size
-    #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
-    
-    # Set reasonable limits
-    current_y_lim = plt.ylim()
-    if abs(current_y_lim[0]) > 50 or abs(current_y_lim[1]) > 50:
-        plt.ylim(-10, 10)
-    
-    current_x_lim = plt.xlim()
-    if abs(current_x_lim[0]) > 50 or abs(current_x_lim[1]) > 50:
-        plt.xlim(-10, 10)
-    
-    plt.savefig("static/graph.png")
-    plt.show()
+    plt.savefig("static/graph.png", dpi=111, bbox_inches='tight')
     plt.close()
     
     return True
+
+
+def handle_constant_equation(eq, color):
+    """Handle equations of form x/y/z = constant"""
+    lhs, rhs = eq.split('=')
+    lhs, rhs = lhs.strip(), rhs.strip()
+    
+    # Check if right side is a number
+    if not rhs.lstrip('-').replace('.', '').isdigit():
+        return False
+    
+    constant = float(rhs)
+    
+    # x = constant (vertical line)
+    if lhs == 'x':
+        plt.axvline(x=constant, color=color, label=f'x = {constant}')
+        return True
+        
+    # y/z = constant (horizontal line)
+    if lhs in ('y', 'z'):
+        plt.axhline(y=constant, color=color, label=f'{lhs} = {constant}')
+        return True
+        
+    # Also check if constant is on left side
+    if rhs == 'x' and lhs.lstrip('-').replace('.', '').isdigit():
+        plt.axvline(x=float(lhs), color=color, label=f'x = {lhs}')
+        return True
+        
+    if rhs in ('y', 'z') and lhs.lstrip('-').replace('.', '').isdigit():
+        plt.axhline(y=float(lhs), color=color, label=f'{rhs} = {lhs}')
+        return True
+        
+    return False
+
+def handle_y_equation(eq, x_vals, color, original_eq):
+    """Handle equations explicitly solving for y"""
+    lhs, rhs = eq.split('=')
+    lhs, rhs = lhs.strip(), rhs.strip()
+    
+    if 'y' not in eq:
+        return False
+    
+    # Determine which side has y
+    y_expr = rhs if lhs == 'y' else lhs
+    
+    # Evaluate for all x values
+    y_points = []
+    for x_val in x_vals:
+        try:
+            y_val = eval(y_expr.replace('x', f'({x_val})'), {'math': math})
+            y_points.append(y_val)
+        except:
+            y_points.append(np.nan)
+    
+    plt.plot(x_vals, y_points, color=color, label=original_eq)
+    return True
+
+def handle_general_equation(eq, x_vals, color):
+    """Handle general f(x) = g(x) case"""
+    lhs, rhs = eq.split('=')
+    lhs, rhs = lhs.strip(), rhs.strip()
+    
+    lhs_y, rhs_y = [], []
+    
+    for x_val in x_vals:
+        try:
+            lhs_val = eval(lhs.replace('x', f'({x_val})'), {'math': math})
+            rhs_val = eval(rhs.replace('x', f'({x_val})'), {'math': math})
+            lhs_y.append(lhs_val)
+            rhs_y.append(rhs_val)
+        except:
+            lhs_y.append(np.nan)
+            rhs_y.append(np.nan)
+    
+    # Plot LHS
+    plt.plot(x_vals, lhs_y, color=color, linestyle='-', label=f'{lhs} (LHS)')
+    
+    # Find and plot intersections
+    diffs = np.array(lhs_y) - np.array(rhs_y)
+    sign_changes = np.where(np.diff(np.sign(diffs)))[0]
+    
+    for idx in sign_changes:
+        if idx < len(x_vals) - 1:
+            x0, x1 = x_vals[idx], x_vals[idx+1]
+            y0, y1 = diffs[idx], diffs[idx+1]
+            
+            if y0 != y1:
+                x_root = x0 - y0 * (x1 - x0) / (y1 - y0)
+                y_root = eval(lhs.replace('x', f'({x_root})'), {'math': math})
+                plt.plot(x_root, y_root, 'ro', markersize=5)
+
+def adjust_axes_limits():
+    y_min, y_max = plt.ylim()
+    if abs(y_min) > 50 or abs(y_max) > 50:
+        plt.ylim(max(y_min, -20), min(y_max, 20))
+    
+    x_min, x_max = plt.xlim()
+    if abs(x_min) > 50 or abs(x_max) > 50:
+        plt.xlim(max(x_min, -20), min(x_max, 20))
+
 # fix for y = c e.g. y = 2
 
 #------------------------------------
@@ -700,7 +747,6 @@ def show_graph(equations):
 
 
 def solve_equation(equations):
-    x, y, z = symbols('x y z')
     
     if len(equations) > 1:
         systemOfequations = True
@@ -713,27 +759,40 @@ def solve_equation(equations):
 
     equations = [preprocess_equation(equation) for equation in equations]
 
+    # pre process equations
+    processedEqs = []
+    operators = []
+    for eq in equations:
+        op = get_operator(eq)
+        print(op)
+        if op is None:
+            raise ValueError(f"Invalid equation")
+        operators.append(op)
+        processedEqs.append(preprocess_equation(eq))
 
+    tempEqs = [eq.replace(op, "=") for eq, op in zip(processedEqs, operators)]
 
     if systemOfequations:
-        return solve_systems_and_linear(equations)
+        result = solve_systems_and_linear(tempEqs)
 
     else:
-        equationType = classify_equation(equations[0])
+        equationType = classify_equation(tempEqs[0])
         print(equationType)
 
         if equationType == 'linear':
-            return solve_systems_and_linear(equations)
+            result = solve_systems_and_linear(tempEqs)
 
         elif equationType == 'quadratic':
-            equation = equations[0]
-            return solve_quadratic(equation)
+            result = solve_quadratic(tempEqs[0])
         
         elif equationType == 'polynomial':
-            equation = equations[0]
-            return solve_polynomial(equation)
-
-    
+            result = solve_polynomial(tempEqs[0])
+        else:
+            raise ValueError(f"Unsupported equation type")
+        
+    result["operators"] = operators
+    return result
+        
 
 
 if __name__ == "__main__":
@@ -744,4 +803,5 @@ if __name__ == "__main__":
 
 
     print(result)
-    show_graph(equations)
+    #show_graph(equations)
+    print("Test")
