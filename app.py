@@ -50,7 +50,6 @@ def format_answer(answer):
 
 app = Flask(__name__)
 app.secret_key="dababy"
-#app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route('/get_last_answer')
 def get_last_answer():
@@ -122,6 +121,4 @@ if __name__ == "__main__":
 
 
 
-# -- -- - - - - - - - 
-# for today, add graph implementation here and then send to front
 

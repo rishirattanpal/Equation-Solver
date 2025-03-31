@@ -102,19 +102,19 @@ pre {
   color: #f5f6fa;
 }
 
-/* Calculator row - changed to dark theme */
+
 .calculator-section .card {
-  background-color: #2d3436;  /* Dark background */
+  background-color: #2d3436;  
   border: none;
 }
 
 .calculator-section .card-header {
-  background-color: #2d3436;  /* Slightly lighter dark background for header */
+  background-color: #2d3436;  
   color: #f5f6fa;
   border-bottom: none;
 }
 
-/* Calculator buttons - updated for better contrast on dark theme */
+
 #calculator {
   margin-top: 1rem;
 }
@@ -132,37 +132,37 @@ pre {
   font-size: 16px;
   border-radius: 8px;
   border: none;
-  background-color: #3d4246;  /* Lighter than the card background */
+  background-color: #3d4246; 
   color: #f5f6fa;
   transition: all 0.2s;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #keys button:hover {
-  background-color: #4a5056;  /* Even lighter on hover */
+  background-color: #4a5056;  
   transform: translateY(-1px);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
 }
 
-/* Keep specialized button colors, but adjust them to work with dark theme */
+
 .variable-btn {
-  background-color: #3867d6 !important;  /* Darker blue */
+  background-color: #3867d6 !important;  
 }
 
 .function-btn {
-  background-color: #4834b0 !important;  /* Darker purple */
+  background-color: #4834b0 !important; 
 }
 
 .operator-btn {
-  background-color: #8b2020 !important;  /* Darker red */
+  background-color: #8b2020 !important;  
 }
 
 .clear-btn {
-  background-color: #8b2020 !important;  /* Same as operator buttons */
+  background-color: #8b2020 !important;  
 }
 
 .equal-btn {
-  background-color: #16a085 !important;  /* Darker green */
+  background-color: #16a085 !important;  
 }
 
 /* Form elements */
@@ -202,7 +202,7 @@ pre {
   color: rgba(255, 255, 255, 0.6) !important;
 }
 
-/* Add this to your styles.css file */
+
 textarea.form-control {
   font-size: 1.8rem; 
   font-family: monospace; 

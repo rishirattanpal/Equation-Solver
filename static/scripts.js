@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-async function get_prev_ans() {  // Changed to snake_case
+async function get_prev_ans() {  
     const equationsArea = document.getElementById("equations");
     
     try {

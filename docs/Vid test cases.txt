@@ -9,6 +9,15 @@ get this to work for graph
 2*x = y
 y = 2
 
+
+
+---------
+SOFTWARE DEMONSTRATION
+
+show error handling:
+- no input
+- incorrect input
+
 show basic arithmetic:
 2+2 = 4 
 
@@ -54,17 +63,6 @@ x = -0.586, 3.414
 (two roots)
 
 
-
-
-FIXING TING
-
-answer: {'equation': ['x = 0.5*y', 'y = 0.5*x + 3'], 'solutions': {'x': 2.0, 'y': 4.0}}
-
-answer: {'solutions': 'System has no solution (inconsistent system).'}
-
-
-
-
 show polynomials:
 
 x**3 - 6*x**2 + 11x - 6 = 0
@@ -75,8 +73,14 @@ x**5 - 3*x**4 + x**3 - x**2 + 2*x - 2 = 0
 x = 2.703, 0.6973+0.5421i, 0.6973−0.5421i, −0.5489+0.8044i, −0.5489−0.8044i
 
 
+x^15 - 15x^14 + 85x^13 - 225x^12 + 274x^11 + 715x^10 - 2470x^9 + 1520x^8 + 3876x^7 - 6188x^6 - 3876x^5 + 8568x^4 + 2744x^3 - 4116x^2 - 672x = 0
+
+
+
+
+
+
 Talk about features i will include:
-get rid of -0
 going to add graph support for z
 add intersection for sim equation
 add inequalitiy support
