@@ -107,12 +107,16 @@ def index():
                 equations=formattedEquations,
                 solutions=formattedSolutions, graphAvailable=graphAvailable, note=note
             )
+        
+        except TypeError as te:
+            flash("Unsupported equation type")
+            return render_template("index.html", graphAvailable = False)
         except ValueError as e:
-            if "No equation entered" in str(e):
-                flash("Invalid equation entered")
-            else:
-                flash(f"Error: {str(e)}")
+            flash("Invalid equation entered")
             return render_template("index.html", grSaphAvailable=False)
+        except Exception as e:
+            flash(f"Unexpected error: {str(e)}")
+            return render_template("index.html", graphAvailable = False)
 
     return render_template("index.html", graphAvailable = False)
 

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <title>Equation Solver</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <div class="container">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col">
+                    <h1 class="app-title text-center">Equation Solver</h1>
+                </div>
+            </div>
+
+            <!-- Input and Graph Section -->
+            <div class="row mb-4">
+                <div class="col-md-6 input-section">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Enter Your Equations</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="equationForm" action="/" method="POST">
+                                <div class="mb-3">
+                                    <label for="equations" class="form-label">Type or use the calculator below (one equation per line):</label>
+                                    <textarea id="equations" name="equations" rows="5" class="form-control" placeholder="Example: 2x + 4 = 10"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Solve Equations</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 graph-section">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">Visualization</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if graphAvailable %}
+                            <div class="graph-container">
+                                <img src="{{ url_for('static', filename='graph.png') }}" alt="Equation Graph">
+                            </div>
+                            {% else %}
+                            <div class = "graph-container">
+                                <p>Graph Unavailable</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            {% if equations or solutions %}
+            <div class="row mb-4">
+                <div class="col-md-6 equations-section">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Input Equations</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if equations %}
+                                <pre class="mb-0">{{ equations }}</pre>
+                            {% else %}
+                                <p class="text-muted mb-0">No equations entered yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 solutions-section">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Solutions</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if solutions %}
+                                <pre class="mb-0">{{ solutions }}</pre>
+                            {% else %}
+                                <p class="text-muted mb-0">Solutions will appear here</p>
+                            {% endif %}
+
+                            {% if note %}
+                                <pre class="mb-0">{{ note }}</pre>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Calculator Section -->
+           
+        </div>
+    </div>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

@@ -25,7 +25,13 @@ body {
   padding-bottom: 0.5rem;
 }
 
-pre{
+pre {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  margin-top: 0.5rem;
+  color: #f5f6fa;
   font-size: 1.8rem;
 }
 
@@ -93,14 +99,7 @@ h5{
   border-bottom: none;
 }
 
-pre {
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-  border-radius: 8px;
-  border: none;
-  margin-top: 0.5rem;
-  color: #f5f6fa;
-}
+
 
 
 .calculator-section .card {
