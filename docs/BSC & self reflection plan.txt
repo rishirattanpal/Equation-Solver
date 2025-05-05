@@ -1,0 +1,28 @@
+BSC & self reflection plan:
+An ability to apply practical and analytical skills gained during the degree programme.
+- COMP101 Intro to programming taught me the foundations of programming as well as python which I used for my backend
+- COMP 201 Software engineering 1 taught me how to plan a project of this scale
+- COMP 208 was good practice for making a large scale project (We made chess with a working AI and LAN
+play) however this was a step up doing it on my own
+- COMP 218 Introduction to theory of computation taught me how regular expressions work which I used
+in the pre-processing function 
+
+
+Innovation and/or creativity.
+- the design and layout for this application is original
+- ? unsure what else to write/reference if anything
+
+
+Synthesis of information, ideas and practices to provide a quality solution together with an evaluation of that solution.
+- Refer to sections 2.1 + 2.2, real methods to solve equations from other people that I have implemented in my own
+way through code
+
+That your project meets a real need in a wider context.
+- Reference 2.4 - shows the uses for equations 
+
+An ability to self-manage a significant piece of work.
+- followed the gantt chart and achieved a final product that fulfils my initials requirements
+
+
+Critical self-evaluation of the process.
+- uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh

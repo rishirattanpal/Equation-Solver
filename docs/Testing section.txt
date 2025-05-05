@@ -1,0 +1,70 @@
+chapter 5 Testing section:
+
+5.1 Component testing:
+- unit tests for backend and frontend
+
+5.1.1 backend:
+- each equation solving function tested against a list of test cases
+ranging from normal to edge cases of their category 
+- would use chat gpt to generate test cases, they are all stored in
+testcases.txt and look for accuracy with my solver and confirm using other solvers
+e.g. wolfram alpha, mathway
+- all passed apart from inequalities
+
+
+
+5.1.2 frontend:
+- frontend testing consisted of the same method, testing individual
+processes and making sure they work here focusing more on how everything
+looks 
+- as well as checking all content flowed through the correct paths
+- tested scripts.js for calculator functionality
+
+
+
+5.2 User evaluation:
+
+- made a survey (questions are shown in appendix) where participants
+would use my app and then review it
+- summarized, questions aimed to find accuracy, speed and aesthetics of my solver
+- I sent the survey out to family, friends, and students (both university
+as well as secondary school as my mother works as a teaching assistant there
+and managed to get a few students to use and test with)
+
+- show results:
+
+fig 36 3 pie charts with yes/no for each question
+- did the application solve all equations (20% yes, 80% no)
+- did the application plot all equations (20% yes, 80% no)
+- did the app crash (100% yes)
+
+talk about how there is room to improve in the solving, more so than plotting but both
+still have room for improvement
+
+
+
+figure 37 4 bar charts with percentage of people on y axis and question on x axis
+- How fast was the application in solving equations (88.5%)
+- how would you rate the applications design (86.20%)
+- how easy was it to use the apps interface (82%)
+- rate your overall experience with the application (80%)
+
+talk about how this is the stronger side of my solver in the speed, ease and looks of the solver
+
+
+talk about how these questions had follow ups (if app didn't plot or solve elaborate on what input)
+as well as a question asking for what features or improvements would you suggest for the
+application
+- improve non linear support
+- improve inequality support
+- add a clear button on the input box and allow for easier reinput of previously entered equation
+- error handling that points out exactly what's wrong with input
+
+
+overall these results show that the apps work, users are especaily happy with the 
+looks, speed and usability with the plotting and solving being my focus for a
+next update, allowing the solver to solve and plot more
+
+
+
+
