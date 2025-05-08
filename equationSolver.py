@@ -204,12 +204,7 @@ def row_reduction(A):
     return B
 
 def back_substitution(U,B):
-# =============================================================================
-#     U is a NumPy array that represents an upper triangular square mxm matrix.  
-#     B is a NumPy array that represents an mx1 vector     
-#     BackSubstitution will return an mx1 vector that is the solution of the
-#     system UX=B.
-# =============================================================================
+
     m = U.shape[0]  # m is number of rows and columns in U
     X = np.zeros((m,1))
     
@@ -224,13 +219,6 @@ def back_substitution(U,B):
     return X
 
 def solve_system(A,B):
-    # =============================================================================
-    # A is a NumPy array that represents a matrix of dimension n x n.
-    # B is a NumPy array that represents a matrix of dimension n x 1.
-    # SolveSystem returns a NumPy array of dimension n x 1 such that AX = B.
-    # If the system AX = B does not have a unique solution, SolveSystem may not
-    # generate correct results.
-    # =============================================================================
 
     infiniteSolutions = False
 
@@ -307,10 +295,7 @@ def solve_systems_and_linear(equations):
 
 # matrix manipulation functions
 def row_swap(A,k,l):
-# =============================================================================
-#     A is a NumPy array.  RowSwap will return duplicate array with rows
-#     k and l swapped.
-# =============================================================================
+
     m = A.shape[0]  # m is number of rows in A
     n = A.shape[1]  # n is number of columns in A
     
@@ -324,10 +309,7 @@ def row_swap(A,k,l):
     return B
 
 def row_scale(A,k,scale):
-# =============================================================================
-#     A is a NumPy array.  RowScale will return duplicate array with the
-#     entries of row k multiplied by scale.
-# =============================================================================
+
     m = A.shape[0]  # m is number of rows in A
     n = A.shape[1]  # n is number of columns in A
     
@@ -339,11 +321,7 @@ def row_scale(A,k,scale):
     return B
 
 def row_add(A,k,l,scale):
-# =============================================================================
-#     A is a numpy array.  RowAdd will return duplicate array with row
-#     l modifed.  The new values will be the old values of row l added to 
-#     the values of row k, multiplied by scale.
-# =============================================================================
+
     m = A.shape[0]  # m is number of rows in A
     n = A.shape[1]  # n is number of columns in A
     
@@ -407,8 +385,9 @@ def solve_quadratic(equation):
             result['solutions'] = x
 
         else:
-            result['solutions'] = "No real roots"
-            result['note'] = "No real roots"
+            result = solve_polynomial(equation)
+            #result['solutions'] = "No real roots"
+            #result['note'] = "No real roots"
 
         return result
 
@@ -605,7 +584,7 @@ def show_graph(equations):
             # Preprocess equation
             eq = preprocess_equation(equation)
             
-            # Handle special cases first
+            # Handle constant cases first
             if handle_constant_equation(eq, color):
                 continue
                 
@@ -625,6 +604,8 @@ def show_graph(equations):
     plt.xlabel("x")
     plt.ylabel("y")
     adjust_axes_limits()
+
+    plt.show()
     
     plt.savefig("static/graph.png", dpi=111, bbox_inches='tight')
     plt.close()
@@ -803,5 +784,5 @@ if __name__ == "__main__":
 
 
     print(result)
-    #show_graph(equations)
+    show_graph(equations)
     print("Test")

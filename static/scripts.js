@@ -54,26 +54,26 @@ function solve_equation() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const equationsArea = document.getElementById("equations");
+// document.addEventListener('DOMContentLoaded', function() {
+//     const equationsArea = document.getElementById("equations");
     
-    // Add keyboard event listener for keyboard shortcuts
-    equationsArea.addEventListener('keydown', function(event) {
-        // Allow special key combinations (like Ctrl+C, Ctrl+V)
-        if (event.ctrlKey || event.metaKey) {
-            return;
-        }
+//     // Add keyboard event listener for keyboard shortcuts
+//     equationsArea.addEventListener('keydown', function(event) {
+//         // Allow special key combinations (like Ctrl+C, Ctrl+V)
+//         if (event.ctrlKey || event.metaKey) {
+//             return;
+//         }
         
-        // Handle Enter key to add a new line instead of submitting the form
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            append_to_equation('\\n');
-        }
-    });
+//         // Handle Enter key to add a new line instead of submitting the form
+//         if (event.key === 'Enter' && !event.shiftKey) {
+//             event.preventDefault();
+//             append_to_equation('\\n');
+//         }
+//     });
     
-    // Initialize focus on the textarea when page loads
-    equationsArea.focus();
-});
+//     // Initialize focus on the textarea when page loads
+//     equationsArea.focus();
+// });
 
 
 async function get_prev_ans() {  
