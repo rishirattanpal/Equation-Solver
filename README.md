@@ -1,7 +1,7 @@
 # Equation Solver Web Application  
 
 
-A full-stack web application that solves mathematical equations, developed as a university dissertation project that earned first-class honors.  
+A full-stack web application that uses Python, HTML, CSS and JS to solve mathematical equations, developed as a university dissertation project that earned first-class honors.  
 
 ## Features  
 
@@ -31,10 +31,3 @@ A full-stack web application that solves mathematical equations, developed as a 
 - Coordinates frontend-backend communication  
 - Formats solutions for display  
 
-## Installation  
-
-```bash
-git clone https://github.com/yourusername/equation-solver.git
-cd equation-solver
-pip install -r requirements.txt
-python app.py
