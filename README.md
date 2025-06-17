@@ -6,11 +6,11 @@ A full-stack web application that solves mathematical equations, developed as a 
 ## Features  
 
 ### Equation Solving  
-- **Linear equations** (single and systems)  
-- **Quadratic equations** using quadratic formula  
-- **Polynomials** (degree n) using Newton-Raphson method  
+- **Linear equations** (single and systems) via gaussian elimination 
+- **Quadratic equations** via quadratic formula  
+- **Polynomials** (degree n) via Newton-Raphson method  
 - **Inequalities** with sign flip handling  
-- **Basic arithmetic** evaluation  
+- **Basic arithmetic** evaluation 
 
 ### Technical Implementation  
 **Backend (Python)**  
